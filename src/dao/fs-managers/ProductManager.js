@@ -69,39 +69,43 @@ class ProductManager {
         }
     }
 
-    updateProduct = async (idProducto, propertyToUpdate, newValue) => {
+    updateProduct = async (idProducto, propertiesToUpdate) => {
 
-        if (propertyToUpdate === 'id') {
-            throw new Error(`No se puede modificar el id`)
-        }
         const productos = await this.getProducts();
-
         const productIndex = productos.findIndex(product => product.id === idProducto);
-
+    
         if (productIndex >= 0) {
-
-            const product = productos[productIndex];
-
-            if (propertyToUpdate === 'code' && (productos.some(product => product.code === newValue))) {
-                throw new Error(`Ya existe un producto con el código # ${newValue}`)
+               
+            for (const propertyToUpdate in propertiesToUpdate) {
+                if (propertyToUpdate === 'id') {
+                    throw new Error(`No se puede modificar el id`);
+                }
+    
+                if (propertyToUpdate === 'code' && productos.some(p => p.code === propertiesToUpdate[propertyToUpdate])) {
+                    throw new Error(`Ya existe un producto con el código # ${propertiesToUpdate[propertyToUpdate]}`);
+                }
+    
+                if (productos[productIndex].hasOwnProperty(propertyToUpdate)) {
+                    productos[productIndex][propertyToUpdate] = propertiesToUpdate[propertyToUpdate];
+                } else {
+                    throw new Error(`La propiedad "${propertyToUpdate}" no es válida para actualizar.`);
+                }
             }
-            if (product.hasOwnProperty(propertyToUpdate)) {
-                product[propertyToUpdate] = newValue;
-                await fs.promises.writeFile(this.path, JSON.stringify(productos));
-                return product;
-            } else {
-                throw new Error(`La propiedad "${propertyToUpdate}" no es válida para actualizar.`);
-            }
+    
+            await fs.promises.writeFile(this.path, JSON.stringify(productos));
+            return productos[productIndex];
         }
     }
-
+   
+    
     deleteProduct = async (idProducto) => {
         let productos = await this.getProducts();
         const productIndex = productos.findIndex(product => product.id === idProducto);
         if (productIndex >= 0) {
+            const productoBorrado = productos[productIndex];
             productos = productos.filter(product => product.id != idProducto);
             await fs.promises.writeFile(this.path, JSON.stringify(productos))
-            return productos;
+            return productoBorrado;
         } else {
             throw new Error(`Producto con id ${idProducto} no existe`);
         }

@@ -1,0 +1,97 @@
+#item-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 12px
+}
+
+.product-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    max-width: 300px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-card p {
+    margin: 5px 0;
+}
+
+.product-card p:first-child {
+    font-weight: bold;
+}
+
+.product-card p:nth-child(3) {
+    color: #666;
+}
+
+.product-card p:nth-child(5) {
+    font-size: 18px;
+    color: #e44d26;
+}
+
+.product-card p:last-child {
+    color: #999;
+}
+
+.form-container {
+    display: flex;
+    justify-content: flex-start;
+    
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination p {
+    margin: 1rem;
+}
+
+button {
+box-shadow: 5px 4px 6px 2px #E488FF, 2px 2px 6px 2px rgba(0,0,0,0);
+background: #788efd;
+}
+
+
+/* real time products */
+
+.form-container form{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 12px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container form p {
+    margin: 0;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* chat */
+
+#chatBox {
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#messageLogs {
+    font-size: 14px;
+    color: #666;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
