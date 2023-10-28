@@ -1,6 +1,6 @@
-import { cartModel } from "../models/cart.js";
+import { cartModel } from "../../models/cart.js";
 
-class CartManager {
+class CartMongo {
 
     constructor() {
     }
@@ -110,4 +110,4 @@ class CartManager {
 
 }
 
-export default CartManager;
+export default CartMongo;

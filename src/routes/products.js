@@ -1,75 +1,17 @@
 import { Router } from 'express';
-import ProductManager from '../dao/db-managers/productManager.js'
-
-const productManager = new ProductManager()
+import { addProduct, deleteProduct, getProductById, getProducts, updateProduct } from '../controllers/products.js';
+import { authorization, passportCall } from "../utils.js";
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', getProducts)
 
-    const query = req.query;
+router.get('/:pid', getProductById)
 
-    let prevLink = '';
-    let nextLink = '';
+router.post('/', passportCall('jwt'), authorization('admin'), addProduct)
 
-    const { docs, limit, page, totalPages, hasPrevPage, hasNextPage, nextPage, prevPage } = await productManager.getAll(query);
+router.put('/:pid', passportCall('jwt'), authorization('admin'), updateProduct)
 
-    hasPrevPage && ( prevLink = `/products?limit=${limit}&page=${prevPage}`)
-    hasNextPage && ( nextLink = `/products?limit=${limit}&page=${nextPage}`)
-
-    res.send({ status: "success", payload: docs, totalPages, prevPage, nextPage, page, hasPrevPage, hasNextPage, limit, prevLink , nextLink});
-
-})
-
-router.get('/:pid', async (req, res) => {
-
-    const pid = req.params.pid;
-
-    try {
-        const product = await productManager.getProductById(pid);
-        res.send({ status: "success", payload: product });
-    } catch (error) {
-        res.status(404).send({ status: 'error', message: error.message })
-    }
-})
-
-router.post('/', async (req, res) => {
-    const product = req.body;
-
-    try {
-        const result = await productManager.addProduct(product);
-        res.send({ status: 'success', payload: result })
-    } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
-    }
-})
-
-router.put('/:pid', async (req, res) => {
-
-    const pid = req.params.pid;
-    const propertiesToUpdate = req.body;
-
-    try {
-        const product = await productManager.updateProduct(pid, propertiesToUpdate);
-        res.send({ status: 'success', payload: product });
-    } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
-    }
-})
-
-router.delete('/:pid', async (req, res) => {
-
-    const pid = req.params.pid;
-
-    try {
-        const result = await productManager.deleteProduct(pid);
-        res.send({ status: 'success', payload: result });
-    } catch (error) {
-        res.status(404).send({ status: 'error', message: error.message })
-    }
-})
+router.delete('/:pid', passportCall('jwt'), authorization('admin'), deleteProduct )
 
 export default router;
-
-
-

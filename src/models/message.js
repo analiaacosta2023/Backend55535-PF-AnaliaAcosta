@@ -4,10 +4,9 @@ const messagesCollection = 'message';
 
 const messageSchema = new mongoose.Schema({
 
-    user: {
-        type: String,
-        require: true,
-        match: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+    user:  {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
     },
 
     message: {
@@ -15,6 +14,10 @@ const messageSchema = new mongoose.Schema({
         require: true,
     }
 
+})
+
+messageSchema.pre('find', function(){
+    this.populate('user');
 })
 
 export const messageModel = mongoose.model(messagesCollection, messageSchema);

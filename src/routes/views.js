@@ -1,51 +1,25 @@
-import { Router, query } from 'express';
-import ProductManager from '../dao/db-managers/productManager.js'
-import CartManager from '../dao/db-managers/cartManager.js'
-
-const productManager = new ProductManager()
-const cartManager = new CartManager()
+import { Router } from 'express';
+import { authorization, passportCall } from "../utils.js";
+import { publicAccess, privateAccess, home, realTimeProducts, chat, products, sproduct, cart, login, register, resetPassword } from '../controllers/views.js';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
-    
-    const {docs} = await productManager.getAll({});
+router.get('/', passportCall('jwt'), publicAccess, home)
 
-    res.render('home', {style: "index.css", docs})
-})
+router.get('/realtimeproducts', passportCall('jwt'), privateAccess, authorization('admin'), realTimeProducts )
 
-router.get('/realtimeproducts', async (req, res) => {
+router.get('/chat', passportCall('jwt'), privateAccess, chat)
 
-    res.render('realTimeProducts', {style: "index.css"})
-})
+router.get('/products', passportCall('jwt'), privateAccess, products)
 
-router.get('/chat', async (req, res) => {
+router.get('/products/:pid', passportCall('jwt'), privateAccess, sproduct)
 
-    res.render('chat', {style: "index.css"})
-})
+router.get('/carts/:cid', passportCall('jwt'), privateAccess, cart)
 
-router.get('/products', async (req, res) => {
-    
-    const query = req.query
+router.get('/login', passportCall('jwt'), publicAccess, login)
 
-    const { docs, hasPrevPage, hasNextPage, nextPage, prevPage , totalPages, page} = await productManager.getAll(query);
+router.get('/register', passportCall('jwt'), publicAccess, register)
 
-    res.render('products', {style: "index.css", docs, hasPrevPage, hasNextPage, nextPage, prevPage , totalPages, page})
-})
+router.get('/resetpassword', passportCall('jwt'), publicAccess, resetPassword)
 
-router.get('/carts/:cid', async (req, res) =>{
-
-try {
-    const cid = req.params.cid
-
-    const cart = await cartManager.getCartById(cid)
-
-    res.render('cart', {cart} )
-
-} catch (error) {
-    res.status(404).send(`Cart not found: ${error.message}`);
-}
-
-})
-           
 export default router;

@@ -3,33 +3,39 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import productsRouter from "./routes/products.js"
 import cartsRouter from "./routes/carts.js"
+import messagesRouter from './routes/messages.js'
 import viewsRouter from "./routes/views.js"
+import sessionsRouter from './routes/sessions.js'
 import handlebars from "express-handlebars";
-import mongoose from 'mongoose';
-import ProductManager from './dao/db-managers/productManager.js'
-import MessageManager from './dao/db-managers/messageManager.js';
+import {Products} from './dao/factory.js'
+import passport from 'passport';
+import { initializePassport } from './config/passport.js';
+import cookieParser from 'cookie-parser'
+import config from './config/config.js'
 
-const productManager = new ProductManager();
-const messageManager = new MessageManager();
-
+const productManager = new Products();
 
 const app = express();
-const PORT = 8080;
-const connection = mongoose.connect('mongodb+srv://analiaaacosta:DQGgU5LVaHtLfJJd@clustercursobackend.bdkstux.mongodb.net/ecommerce')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
-app.use('/', viewsRouter)
-
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars')
 
-const server = app.listen(PORT, () => {
+app.use(cookieParser());
+initializePassport();
+app.use(passport.initialize());
+
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
+app.use('/api/messages', messagesRouter);
+app.use('/api/sessions', sessionsRouter);
+app.use('/', viewsRouter)
+
+const server = app.listen(config.port, () => {
     console.log('Server ON')
 })
 
@@ -74,11 +80,7 @@ io.on('connection', async (socket) => {
 
         try {
 
-            await messageManager.saveMessage(data);
-
-            const messages = await messageManager.getAll();
-
-            io.emit('messageLogs', messages);
+            io.emit('messageLogs', data);
 
         } catch (error) {
 
@@ -89,9 +91,7 @@ io.on('connection', async (socket) => {
 
     socket.on('authenticated', async data => {
         socket.broadcast.emit('newUserConnected', data);
-        const messages = await messageManager.getAll();
-
-            io.emit('messageLogs', messages);
+                    io.emit('messageLogs', data);
     })
 
 })

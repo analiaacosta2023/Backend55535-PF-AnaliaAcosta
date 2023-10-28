@@ -1,6 +1,6 @@
-import { productModel } from '../models/product.js'
+import { productModel } from '../../models/product.js'
 
-class ProductManager {
+class ProductMongo {
 
     constructor() {
     }
@@ -45,7 +45,7 @@ class ProductManager {
     getProductById = async (idProducto) => {
 
         try {
-            const result = await productModel.findById(idProducto);
+            const result = await productModel.findById(idProducto).lean();
             return result
         } catch (error) {
             throw error
@@ -78,5 +78,5 @@ class ProductManager {
 
 }
 
-export default ProductManager;
+export default ProductMongo;
 

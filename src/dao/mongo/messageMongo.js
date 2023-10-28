@@ -1,6 +1,6 @@
-import { messageModel } from "../models/message.js";
+import { messageModel } from "../../models/message.js";
 
-class MessageManager {
+class MessageMongo {
 
     constructor() {
     }
@@ -22,4 +22,4 @@ class MessageManager {
     }
 }
 
-export default MessageManager;
+export default MessageMongo;
