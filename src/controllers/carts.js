@@ -132,8 +132,6 @@ export const purchase = async (req, res) => {
 
         const total = subtotal + shippingPrice
 
-        console.log(total)
-
         const ticket = await ticketsService.createTicket({ total, products: orderProducts, email })
 
         const order = { ticket, noStockProducts: cartProducts }
