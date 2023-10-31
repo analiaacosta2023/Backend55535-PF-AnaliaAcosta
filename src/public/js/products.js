@@ -10,7 +10,6 @@ productCards.forEach((productCard) => {
 
             const productId = event.target.getAttribute('data-product-id');
             const cartId = event.target.getAttribute('data-cart-id');
-            console.log(cartId)
 
             addToCart(cartId, productId);
         } else {

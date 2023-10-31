@@ -2,13 +2,9 @@ import passport from "passport";
 import local from "passport-local"
 import gitHubStrategy from "passport-github2"
 import jwt from 'passport-jwt';
-import {Users, Carts} from '../dao/factory.js'
+import { usersService, cartsService } from "../services/index.js";
 import { cookieExtractor, createHash, isValidPassword } from '../utils.js'
 import config from "./config.js";
-import UserDTO from "../dao/DTOs/userDTO.js";
-
-const cartManager = new Carts()
-const userManager = new Users()
 
 const admin = {
     first_name: 'Admin',
@@ -33,7 +29,7 @@ export const initializePassport = () => {
                 return done(null, false, { message: 'Usuario ya existe' })
             }
 
-            const exists = await userManager.getUserByEmail(email);
+            const exists = await usersService.getUserByEmail(email);
             if (exists) {
                 return done(null, false, { message: 'Usuario ya existe' })
             };
@@ -42,10 +38,10 @@ export const initializePassport = () => {
                 last_name,
                 email,
                 age,
-                cart: await cartManager.addCart({}),
+                cart: await cartsService.addCart({}),
                 password: createHash(password)
             };
-            let result = await userManager.addUser(newUser);
+            let result = await usersService.addUser(newUser);
             return done(null, result)
         } catch (error) {
             return done('Error al crear el usuario:' + error)
@@ -58,7 +54,7 @@ export const initializePassport = () => {
             if (username === admin.email && password === admin.password) {
                 user = admin
             } else {
-                user = await userManager.getUserByEmail(username);
+                user = await usersService.getUserByEmail(username);
 
                 if (!user) {
                     return done(null, false, { message: "Usuario no encontrado" })
@@ -102,11 +98,11 @@ export const initializePassport = () => {
             }
 
             console.log(profile);
-            let user = await userManager.getUserByEmail(profile.email )
+            let user = await usersService.getUserByEmail(profile.email )
             if (!user) {
-                const cart = await cartManager.addCart({})
-                let newUser = new UserDTO({ name: profile._json.name, age: null, cart, email: profile.email, password: '' })
-                let result = await userManager.addUser(newUser);
+                const cart = await cartsService.addCart({})
+                let newUser = { name: profile._json.name, age: null, cart, email: profile.email, password: '' }
+                let result = await usersService.addUser(newUser);
                 return done(null, result);
             }
             done(null, user)
@@ -120,7 +116,7 @@ export const initializePassport = () => {
     })
 
     passport.deserializeUser(async (id, done) => {
-        let user = await userManager.getUserById(id);
+        let user = await usersService.getUserById(id);
         done(null, user);
     })
 

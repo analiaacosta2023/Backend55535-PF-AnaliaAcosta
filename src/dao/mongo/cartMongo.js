@@ -56,7 +56,7 @@ class CartMongo {
         }
     }
 
-    deleteProductToCart = async (idCart, idProduct) => {
+    deleteProductFromCart = async (idCart, idProduct) => {
         try {
             const result = await cartModel.findOneAndUpdate(
                 { _id: idCart },
@@ -73,7 +73,7 @@ class CartMongo {
         try {
             const result = await cartModel.findOneAndUpdate(
                 { _id: idCart },
-                { $push: { products: products } },
+                { $set: { products: products } },
                 { new: true }
             )
             return result;

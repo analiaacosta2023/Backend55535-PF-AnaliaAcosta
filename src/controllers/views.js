@@ -1,8 +1,4 @@
-import {Carts, Products, Messages} from '../dao/factory.js'
-
-const productManager = new Products()
-const cartManager = new Carts()
-const messageManager = new Messages()
+import { productsService, messagesService } from "../services/index.js"
 
 export const publicAccess = (req, res, next) => {
     if (req.user) return res.redirect('/products');
@@ -29,7 +25,7 @@ export const realTimeProducts = async (req, res) => {
 
 export const chat = async (req, res) => {
 
-    const messages = await messageManager.getAll();
+    const messages = await messagesService.getAll();
 
     res.render('chat', { style: "index.css", user: req.user, messages })
 }
@@ -38,7 +34,7 @@ export const products = async (req, res) => {
 
     const query = req.query
 
-    const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages, page } = await productManager.getAll(query);
+    const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages, page } = await productsService.getAll(query);
 
     res.render('products', { style: "index.css", user: req.user, docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages, page })
 }
@@ -48,7 +44,7 @@ export const sproduct = async (req, res) => {
     const pid = req.params.pid
 
     try {
-        const product = await productManager.getProductById(pid);
+        const product = await productsService.getProductById(pid);
 
         res.render('sproduct', { style: "index.css", user: req.user, product })
     } catch (error) {
@@ -59,11 +55,8 @@ export const sproduct = async (req, res) => {
 export const cart = async (req, res) => {
 
     try {
-        const cid = req.params.cid
-
-        const cart = await cartManager.getCartById(cid)
-
-        res.render('cart', { style: "index.css", cart, user: req.user })
+        
+        res.render('cart', { style: "index.css", user: req.user })
 
     } catch (error) {
         res.status(404).send(`Cart not found: ${error.message}`);

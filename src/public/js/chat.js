@@ -82,7 +82,7 @@ socket.on('messageLogs', data => {
             return response.json();
         })
         .then(data => {
-            if (data.status === 'success') {
+
                 const messages = data.payload;
 
                 let acum = " "
@@ -96,9 +96,6 @@ socket.on('messageLogs', data => {
                 })
                 log.innerHTML = acum;
 
-            } else {
-                console.error('Request was not successful');
-            }
         })
         .catch(error => {
             console.error('Fetch Error:', error);

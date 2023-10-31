@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addCart, addProduct, cleanCart, deleteProduct, getCart, updateCart, updateQuantity } from '../controllers/carts.js';
+import { addCart, addProduct, cleanCart, deleteProduct, getCart, updateCart, updateQuantity, purchase } from '../controllers/carts.js';
 import { authorization, passportCall } from "../utils.js";
 
 const router = Router();
@@ -18,6 +18,7 @@ router.put('/:cid/product/:pid', updateQuantity)
 
 router.delete('/:cid', cleanCart)
 
+router.post('/:cid/purchase', passportCall('jwt'), authorization('usuario'), purchase)
 
 export default router;
 

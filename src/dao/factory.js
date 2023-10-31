@@ -5,6 +5,7 @@ export let Carts;
 export let Messages;
 export let Products;
 export let Users;
+export let Tickets;
 switch (config.persistence) {
     case "MONGO":
         const connection = mongoose.connect(config.mongoUrl, {
@@ -15,10 +16,12 @@ switch (config.persistence) {
         const { default: MessagesMongo } = await import('./mongo/messageMongo.js');
         const { default: ProductsMongo } = await import('./mongo/productMongo.js');
         const { default: UsersMongo } = await import('./mongo/userMongo.js');
+        const { default: TicketsMongo } = await import('./mongo/ticketMongo.js');
         Carts = CartsMongo;
         Messages = MessagesMongo;
         Products = ProductsMongo;
         Users = UsersMongo;
+        Tickets = TicketsMongo;
         break;
     case "MEMORY":
         const { default: CartsMemory } = await import('./memory/cartManager.js');

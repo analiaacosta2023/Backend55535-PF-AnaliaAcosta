@@ -7,13 +7,11 @@ import messagesRouter from './routes/messages.js'
 import viewsRouter from "./routes/views.js"
 import sessionsRouter from './routes/sessions.js'
 import handlebars from "express-handlebars";
-import {Products} from './dao/factory.js'
+import {productsService} from "./services/index.js"
 import passport from 'passport';
 import { initializePassport } from './config/passport.js';
 import cookieParser from 'cookie-parser'
 import config from './config/config.js'
-
-const productManager = new Products();
 
 const app = express();
 
@@ -45,15 +43,15 @@ const io = new Server(server)
 io.on('connection', async (socket) => {
     console.log("Nuevo cliente conectado")
 
-    const {docs} = await productManager.getAll({});
+    const {docs} = await productsService.getAll({});
     io.emit('products', docs);
 
     socket.on('new-product', async data => {
 
         try {
-            await productManager.addProduct(data.message);
+            await productsService.addProduct(data.message);
 
-            const {docs} = await productManager.getAll({});
+            const {docs} = await productsService.getAll({});
 
             io.emit('products', docs);
 
@@ -65,9 +63,9 @@ io.on('connection', async (socket) => {
     socket.on('delete-product', async data => {
 
         try {
-            await productManager.deleteProduct(data.message);
+            await productsService.deleteProduct(data.message);
 
-            const {docs} = await productManager.getAll({});
+            const {docs} = await productsService.getAll({});
 
             io.emit('products', docs);
 

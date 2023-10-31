@@ -1,9 +1,7 @@
-import {Users} from '../dao/factory.js'
+import { usersService } from '../services/index.js';
 import { createHash } from "../utils.js";
 import jwt from 'jsonwebtoken';
-import UserDTO from '../dao/DTOs/userDTO.js';
-
-const userManager = new Users()
+import UserDTOCurrent from '../dao/DTOs/userDTOCurrent.js';
 
 export const login = async (req, res) => {
 
@@ -62,19 +60,19 @@ export const restartPassword = async (req, res) => {
     if (!email || !password) {
         return res.status(400).send({ status: "error", error: "Datos incompletos" });
     }
-    const user = await userManager.getUserByEmail( email );
+    const user = await usersService.getUserByEmail( email );
     if (!user) {
         return res.status(404).send({ status: "error", error: "No existe el usuario" });
     }
     const passwordHash = createHash(password);
     const updates = { password: passwordHash }
-    await userManager.updateUser(email , updates)
+    await usersService.updateUser(email , updates)
     res.send({ status: "success" })
 
 }
 
 export const current = (req, res) => {
     console.log(req.user)
-    const user = new UserDTO(req.user)
+    const user = new UserDTOCurrent(req.user)
     res.send({ status: "success", payload: user })
 }

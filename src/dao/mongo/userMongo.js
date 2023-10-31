@@ -41,16 +41,6 @@ class UserMongo {
         }
     }
 
-    getUserByUsername = async (userName) => {
-
-        try {
-            const user = await userModel.findOne({userName}).lean();
-            return user
-        } catch (error) {
-            throw error
-        }
-    }
-
     updateUser = async (email, updates) => {
         try {
             const result = await userModel.updateOne({ email }, { $set: updates })
