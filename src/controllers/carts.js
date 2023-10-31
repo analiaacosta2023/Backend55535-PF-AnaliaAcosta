@@ -122,7 +122,7 @@ export const purchase = async (req, res) => {
 
         }
 
-        await cartsService.updateCartProducts(cid, cartProducts)
+        const newCart = await cartsService.updateCartProducts(cid, cartProducts)
 
         let subtotal = 0;
 
@@ -134,7 +134,7 @@ export const purchase = async (req, res) => {
 
         const ticket = await ticketsService.createTicket({ total, products: orderProducts, email })
 
-        const order = { ticket, noStockProducts: cartProducts }
+        const order = { ticket, cart: newCart }
 
         res.send({ status: 'success', payload: order });
 

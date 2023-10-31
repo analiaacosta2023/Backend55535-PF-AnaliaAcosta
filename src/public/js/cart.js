@@ -277,7 +277,10 @@ function checkout() {
             return response.json();
         })
         .then(data => {
-            const { ticket, noStockProducts } = data.payload;
+            const ticket = data.payload.ticket;
+            cart = data.payload.cart;
+
+            showCart(cart);
 
             const orderedProducts = ticket.products
 
@@ -286,22 +289,18 @@ function checkout() {
                 mssg += `<br> Id ${product.product}: ${product.quantity} unidades`
             })
 
-            if (noStockProducts.length > 0) {
+            if (cart.products.length > 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: `ticket: ${ticket.code}`,
                     html: `<p>Se realizó su orden parcialmente ${mssg}</p>`
-                }).then(() => {
-                    location.reload();
-                });
+                })
             } else {
                 Swal.fire({
                     icon: 'success',
                     title: `ticket: ${ticket.code}`,
                     html: `<p>Se completó su orden ${mssg}</p>`
-                }).then(() => {
-                    location.reload();
-                });
+                })
             }
         })
         .catch(error => {
