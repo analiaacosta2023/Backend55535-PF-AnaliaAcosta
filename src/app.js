@@ -6,12 +6,14 @@ import cartsRouter from "./routes/carts.js"
 import messagesRouter from './routes/messages.js'
 import viewsRouter from "./routes/views.js"
 import sessionsRouter from './routes/sessions.js'
+import mockingRouter from './routes/mocking.js'
 import handlebars from "express-handlebars";
 import {productsService} from "./services/index.js"
 import passport from 'passport';
 import { initializePassport } from './config/passport.js';
 import cookieParser from 'cookie-parser'
 import config from './config/config.js'
+import errorHandler from './middlewares/errors/index.js'
 
 const app = express();
 
@@ -32,6 +34,8 @@ app.use('/api/carts', cartsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/', viewsRouter)
+app.use('/mockingproducts', mockingRouter)
+app.use(errorHandler);
 
 const server = app.listen(config.port, () => {
     console.log('Server ON')

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
-import { passportCall } from "../utils.js";
-import { current, failLogin, failRegister, githubCallback, login, logout, register, restartPassword } from "../controllers/sessions.js";
+import { passportCall, validateResetCode } from "../utils.js";
+import { current, failLogin, failRegister, githubCallback, login, logout, register, resetPassword, restartPassword } from "../controllers/sessions.js";
 
 const router = Router();
 
@@ -19,8 +19,10 @@ router.get('/failRegister', failRegister)
 
 router.get('/logout', logout);
 
-router.put('/restartPassword', restartPassword)
+router.post('/resetPassword', resetPassword);
 
-router.get('/current', passportCall('jwt'), current)
+router.put('/restartPassword', validateResetCode(), restartPassword);
+
+router.get('/current', passportCall('jwt'), current);
 
 export default router;

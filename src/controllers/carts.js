@@ -1,11 +1,20 @@
 import { cartsService, ticketsService, productsService } from "../services/index.js";
+import { sendEmailToUser } from "../utils.js";
+import CustomError from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enums.js";
+import {generateGetCartErrorInfo, generateAddToCartErrorInfo, generateCleanCartErrorInfo, generateEmailErrorInfo, generateInvalidTypeErrorInfo} from "../services/errors/info.js";
 
 export const addCart = async (req, res) => {
     try {
         const result = await cartsService.addCart({});
         res.send({ status: 'success', payload: result })
     } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
+        CustomError.createError({
+            name: 'Create cart error',
+            cause: 'Error al crear carrito',
+            message: error.message,
+            code: EErrors.INVALID_TYPES_ERROR
+        })
     }
 }
 
@@ -17,7 +26,12 @@ export const getCart = async (req, res) => {
         const cart = await cartsService.getCartById(cid);
         res.send({ status: "success", payload: cart });
     } catch (error) {
-        res.status(404).send({ status: 'error', message: error.message })
+        CustomError.createError({
+            name: 'Cart get error',
+            cause: generateGetCartErrorInfo(cid),
+            message: error.message,
+            code: EErrors.INVALID_PARAM_ERROR
+        })
     }
 }
 
@@ -30,7 +44,12 @@ export const addProduct = async (req, res) => {
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
+        CustomError.createError({
+            name: 'Add product to cart error',
+            cause: generateAddToCartErrorInfo(pid, cid),
+            message: error.message,
+            code: EErrors.INVALID_TYPES_ERROR
+        })
     }
 }
 
@@ -43,7 +62,12 @@ export const deleteProduct = async (req, res) => {
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
+        CustomError.createError({
+            name: 'Delete product from cart error',
+            cause: generateAddToCartErrorInfo(pid, cid),
+            message: error.message,
+            code: EErrors.INVALID_TYPES_ERROR
+        })
     }
 }
 
@@ -56,7 +80,12 @@ export const updateCart = async (req, res) => {
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
+        CustomError.createError({
+            name: 'Update cart error',
+            cause:  generateInvalidTypeErrorInfo(),
+            message: error.message,
+            code: EErrors.INVALID_TYPES_ERROR
+        })
     }
 }
 
@@ -70,7 +99,12 @@ export const updateQuantity = async (req, res) => {
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
+        CustomError.createError({
+            name: 'Update quantity of a product in the cart error',
+            cause: generateInvalidTypeErrorInfo(),
+            message: error.message,
+            code: EErrors.INVALID_TYPES_ERROR
+        })
     }
 }
 
@@ -82,7 +116,12 @@ export const cleanCart = async (req, res) => {
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
+        CustomError.createError({
+            name: 'Clean cart error',
+            cause: generateCleanCartErrorInfo(cid),
+            message: error.message,
+            code: EErrors.INVALID_PARAM_ERROR
+        })
     }
 }
 
@@ -117,8 +156,12 @@ export const purchase = async (req, res) => {
         })
 
         if (orderProducts.length === 0) {
-
-            throw new Error(`No hay stock de los productos seleccionados`)
+            CustomError.createError({
+                name: 'No stock error',
+                cause: `No hay stock de los productos seleccionados`,
+                message: `No hay stock de los productos seleccionados`,
+                code: EErrors.ROUTING_ERROR
+            })
 
         }
 
@@ -135,6 +178,30 @@ export const purchase = async (req, res) => {
         const ticket = await ticketsService.createTicket({ total, products: orderProducts, email })
 
         const order = { ticket, cart: newCart }
+
+        // Enviar mail con orden
+
+        const subject = "Resumen de tu orden"
+
+        const orderedProducts = ticket.products
+
+        let mssg = ''
+        orderedProducts.forEach(product => {
+            mssg += `<br> Id ${product.product}: ${product.quantity} unidades`
+        })
+
+        const html = `<h1>Resumen de tu orden</h1><p>Ticket: ${ticket.code}<br>Fecha y hora: ${ticket.purchase_datetime}<br>Total: $ ${ticket.amount}<br>Productos: ${mssg}</p>`
+    
+        const result = await sendEmailToUser(email, subject, html)
+    
+        if (result.rejected.length > 0) {
+            CustomError.createError({
+                name: 'Email rejected',
+                cause: generateEmailErrorInfo(email),
+                message: "El email con el resumen de tu orden fue rechazado.",
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
 
         res.send({ status: 'success', payload: order });
 
