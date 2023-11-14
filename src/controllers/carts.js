@@ -146,13 +146,15 @@ export const purchase = async (req, res) => {
                     cartProducts = cartProducts.filter(p => p !== product)
                     productsService.updateProduct(product.product._id, { stock: stock - product.quantity })
                 } else {
+                    req.logger.warning(`There is not enough stock of the product ${product.product._id}`)
                     const difference = product.quantity - stock
                     product.quantity = difference
                     orderProducts.push({ product: product.product, quantity: stock })
                     productsService.updateProduct(product.product._id, { stock: 0 })
                 }
+            } else {
+                req.logger.warning(`There is not stock of the product ${product.product._id}`)
             }
-
         })
 
         if (orderProducts.length === 0) {
@@ -203,9 +205,12 @@ export const purchase = async (req, res) => {
             })
         }
 
+        req.logger.info(`New order ${ticket.code}`)
+
         res.send({ status: 'success', payload: order });
 
     } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
+        req.logger.error(`Error in purchase`)
+        res.status(404).send({ status: 'error', message: error.message })
     }
 } 

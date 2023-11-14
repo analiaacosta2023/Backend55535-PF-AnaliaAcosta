@@ -7,6 +7,7 @@ import messagesRouter from './routes/messages.js'
 import viewsRouter from "./routes/views.js"
 import sessionsRouter from './routes/sessions.js'
 import mockingRouter from './routes/mocking.js'
+import loggerRouter from './routes/logger.js'
 import handlebars from "express-handlebars";
 import {productsService} from "./services/index.js"
 import passport from 'passport';
@@ -14,12 +15,15 @@ import { initializePassport } from './config/passport.js';
 import cookieParser from 'cookie-parser'
 import config from './config/config.js'
 import errorHandler from './middlewares/errors/index.js'
+import { addLogger } from './utils/logger.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+
+app.use(addLogger)
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
@@ -33,8 +37,10 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/sessions', sessionsRouter);
-app.use('/', viewsRouter)
-app.use('/mockingproducts', mockingRouter)
+app.use('/', viewsRouter);
+app.use('/mockingproducts', mockingRouter);
+app.use('/loggerTest', loggerRouter);
+
 app.use(errorHandler);
 
 const server = app.listen(config.port, () => {

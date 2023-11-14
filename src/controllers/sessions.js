@@ -135,7 +135,12 @@ export const restartPassword = async (req, res) => {
 }
 
 export const current = (req, res) => {
-    console.log(req.user)
+    
+    if(!req.user) {
+        req.logger.error('No authenticated user')
+        return res.send({ status: "error", message: 'No authenticated user' })
+    }
+
     const user = new UserDTOCurrent(req.user)
     res.send({ status: "success", payload: user })
 }

@@ -7,7 +7,7 @@ export const publicAccess = (req, res, next) => {
 
 export const privateAccess = (req, res, next) => {
     if (!req.user) {
-        console.log(req.message)
+        req.logger.error(req.message)
         return res.redirect('/login');
     }
     next();
@@ -48,7 +48,7 @@ export const sproduct = async (req, res) => {
 
         res.render('sproduct', { style: "index.css", user: req.user, product })
     } catch (error) {
-        console.log(error)
+        req.logger.error(error)
     }
 }
 
