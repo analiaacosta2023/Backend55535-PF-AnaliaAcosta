@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import UserDTOCurrent from '../dao/DTOs/userDTOCurrent.js';
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
-import {generateGetUserByEmailErrorInfo, generateEmailErrorInfo} from "../services/errors/info.js";
+import { generateGetUserByEmailErrorInfo, generateEmailErrorInfo } from "../services/errors/info.js";
 
 export const login = async (req, res) => {
 
@@ -58,69 +58,73 @@ export const failRegister = async (req, res) => {
     })
 }
 
-export const logout = (req, res) => {
+export const logout = (req, res, next) => {
     try {
         res.clearCookie('coderCookie');
         res.redirect('/');
     } catch (error) {
-        CustomError.createError({
-            name: 'Internal Server Error',
-            cause: 'Error del servidor',
-            message: error.message,
-            code: EErrors.SERVER_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const resetPassword = async (req, res) => {
+export const resetPassword = async (req, res, next) => {
     const { email } = req.body;
-    if (!email) {
-        CustomError.createError({
-            name: 'Email error',
-            cause: "No se ingresó email válido",
-            message: 'Not valid email',
-            code: EErrors.INVALID_PARAM_ERROR
-        })
+    try {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            CustomError.createError({
+                name: 'Email error',
+                cause: "No se ingresó email válido",
+                message: 'Not valid email',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        const user = await usersService.getUserByEmail(email);
+        if (!user) {
+            CustomError.createError({
+                name: 'User get error',
+                cause: generateGetUserByEmailErrorInfo(email),
+                message: 'User not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
+        const code = generateRandomCode();
+
+        const newCode = await resetCodesService.saveCode(email, code);
+
+        if (!newCode) {
+            CustomError.createError({
+                name: 'Internal Server Error',
+                cause: 'Error guardando el código de recuperación.',
+                message: 'Error saving code',
+                code: EErrors.SERVER_ERROR
+            })
+        }
+
+        const subject = "Código de recuperación de tu contraseña"
+
+        const html = `<p>El código para recuperar tu contraseña es: ${code}<br>Si no fuiste tú quién lo solicitó, ignora este mensaje.</p>`
+
+        const result = await sendEmailToUser(email, subject, html)
+
+        if (result.rejected.length > 0) {
+            CustomError.createError({
+                name: 'Email rejected',
+                cause: generateEmailErrorInfo(email),
+                message: "El email con el código de recuperación fue rechazado.",
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        res.status(200).json({ message: 'Código de recuperación enviado exitosamente' });
+    } catch (error) {
+        req.logger.error(error.message)
+        next(error)
     }
-    const user = await usersService.getUserByEmail(email);
-    if (!user) {
-        CustomError.createError({
-            name: 'User get error',
-            cause: generateGetUserByEmailErrorInfo(email),
-            message: 'User not found',
-            code: EErrors.INVALID_PARAM_ERROR
-        })
-    }
 
-    const code = generateRandomCode();
-
-    const newCode = await resetCodesService.saveCode(email, code);
-
-    if (!newCode) {
-        CustomError.createError({
-            name: 'Internal Server Error',
-            cause: 'Error guardando el código de recuperación.',
-            message: 'Error saving code',
-            code: EErrors.SERVER_ERROR
-        })
-    }
-
-    const subject = "Código de recuperación de tu contraseña"
-
-    const html = `<p>El código para recuperar tu contraseña es: ${code}<br>Si no fuiste tú quién lo solicitó, ignora este mensaje.</p>`
-
-    const result = await sendEmailToUser(email, subject, html)
-
-    if (result.rejected.length > 0) {
-        CustomError.createError({
-            name: 'Email rejected',
-            cause: generateEmailErrorInfo(email),
-            message: "El email con el código de recuperación fue rechazado.",
-            code: EErrors.INVALID_PARAM_ERROR
-        })
-    }
-
-    res.status(200).json({ message: 'Código de recuperación enviado exitosamente' });
 }
 
 export const restartPassword = async (req, res) => {
@@ -135,8 +139,8 @@ export const restartPassword = async (req, res) => {
 }
 
 export const current = (req, res) => {
-    
-    if(!req.user) {
+
+    if (!req.user) {
         req.logger.error('No authenticated user')
         return res.send({ status: "error", message: 'No authenticated user' })
     }

@@ -4,3 +4,33 @@ error: No authenticated user
 error: Server error on purchase
 error: Error on purchase
 error: No authenticated user
+error: Product not found
+error: Product not found
+error: El id 64f650b5fe5c0b9e6ec4c429 no corresponde con ningún producto.
+error: Object id invalid format
+error: El id 64f650b5fe5c0b9e6ec4c429p no tiene el formato correcto. Debe estar compuesto por números del 0 al 9 y letras minúsculas de la "a" a la "f", con longitud total es de 24 caracteres.
+error: Object id invalid format
+error: Product not found
+error: Object id invalid format
+error: Unauthorized
+error: Product not found
+error: Product not found
+error: Error: No auth token
+error: Object id invalid format
+error: At least one property must be provided for update
+error: Invalid properties
+error: Invalid properties
+error: Product not found
+error: Error: No auth token
+error: NaN is not a function
+error: Product or cart not found
+error: Unauthorized
+error: Error: No auth token
+error: Product or cart not found
+error: Object id invalid format
+error: Object id invalid format
+error: User not found
+error: User not found
+error: User not found
+error: Not valid email
+error: Not valid email

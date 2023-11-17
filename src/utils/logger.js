@@ -59,7 +59,6 @@ export const addLogger = (req, res, next) => {
     } else if (environment == 'prod') {
         req.logger = prodLogger;
     }
-        req.logger.info(environment)
     req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`);
     next();
 }

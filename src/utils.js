@@ -8,7 +8,7 @@ import { resetCodesService } from './services/index.js';
 import { Faker, es } from '@faker-js/faker';
 import CustomError from "./services/errors/CustomError.js";
 import EErrors from "./services/errors/enums.js";
-import {generateAuthorizationErrorInfo} from "./services/errors/info.js";
+import { generateAuthorizationErrorInfo } from "./services/errors/info.js";
 
 
 const faker = new Faker({ locale: [es] })
@@ -53,23 +53,28 @@ export const passportCall = (strategy) => {
 
 export const authorization = (role) => {
     return async (req, res, next) => {
-        if (!req.user) {
-            CustomError.createError({
-                name: 'Authorization error',
-                cause: 'Credenciales incorrectas, no autorizado',
-                message: 'Unauthorized',
-                code: EErrors.UNAUTHORIZED
-            })
+        try {
+            if (!req.user) {
+                CustomError.createError({
+                    name: 'Authorization error',
+                    cause: 'Credenciales incorrectas, no autorizado',
+                    message: 'Unauthorized',
+                    code: EErrors.UNAUTHORIZED
+                })
+            }
+            if (req.user.role != role) {
+                CustomError.createError({
+                    name: 'No permissions',
+                    cause: generateAuthorizationErrorInfo(role),
+                    message: 'Forbidden',
+                    code: EErrors.FORBIDDEN
+                })
+            }
+            next();
+        } catch (error) {
+            req.logger.error(error.message)
+            next(error)
         }
-        if (req.user.role != role) {
-            CustomError.createError({
-                name: 'No permissions',
-                cause: generateAuthorizationErrorInfo(role),
-                message: 'Forbidden',
-                code: EErrors.FORBIDDEN
-            })
-        }
-        next();
     }
 }
 
@@ -119,13 +124,13 @@ export const validateResetCode = () => {
 
         if (!resetCode) {
             return res.status(404).json({ error: 'Código inválido' });
-          }
+        }
 
-          if (resetCode.expiresAt <= new Date()) {
+        if (resetCode.expiresAt <= new Date()) {
             return res.status(400).json({ error: 'Código expirado' });
-          }
+        }
 
-          await resetCodesService.deleteCode(email, code)
+        await resetCodesService.deleteCode(email, code)
 
         next();
     }
@@ -134,15 +139,15 @@ export const validateResetCode = () => {
 // Mocking
 
 export const generateProduct = () => {
- return {
-    _id: faker.database.mongodbObjectId(), 
-    title: faker.commerce.product(),
-    description: faker.commerce.productName(),
-    code: faker.string.alphanumeric({ length: { min: 5, max: 10 } }),
-    price: faker.commerce.price({ min: 10, max: 50 }),
-    stock: faker.number.int({ max: 100 }),
-    category: faker.commerce.department(),
-    thumbnail: [faker.image.url(), faker.image.url()],
-    status: faker.datatype.boolean()
- }
+    return {
+        _id: faker.database.mongodbObjectId(),
+        title: faker.commerce.product(),
+        description: faker.commerce.productName(),
+        code: faker.string.alphanumeric({ length: { min: 5, max: 10 } }),
+        price: faker.commerce.price({ min: 10, max: 50 }),
+        stock: faker.number.int({ max: 100 }),
+        category: faker.commerce.department(),
+        thumbnail: [faker.image.url(), faker.image.url()],
+        status: faker.datatype.boolean()
+    }
 }

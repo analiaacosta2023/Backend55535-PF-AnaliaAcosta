@@ -2,136 +2,326 @@ import { cartsService, ticketsService, productsService } from "../services/index
 import { sendEmailToUser } from "../utils.js";
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
-import {generateGetCartErrorInfo, generateAddToCartErrorInfo, generateCleanCartErrorInfo, generateEmailErrorInfo, generateInvalidTypeErrorInfo} from "../services/errors/info.js";
+import { generateGetCartErrorInfo, generateAddToCartErrorInfo, generateEmailErrorInfo, generateObjectIdErrorInfo } from "../services/errors/info.js";
+import mongoose from 'mongoose';
 
-export const addCart = async (req, res) => {
+export const addCart = async (req, res, next) => {
     try {
         const result = await cartsService.addCart({});
         res.send({ status: 'success', payload: result })
     } catch (error) {
-        CustomError.createError({
-            name: 'Create cart error',
-            cause: 'Error al crear carrito',
-            message: error.message,
-            code: EErrors.INVALID_TYPES_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const getCart = async (req, res) => {
+export const getCart = async (req, res, next) => {
 
     const cid = req.params.cid;
 
     try {
+
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+            CustomError.createError({
+                name: 'Cart get error',
+                cause: generateObjectIdErrorInfo(cid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
         const cart = await cartsService.getCartById(cid);
+
+        if (!cart) {
+            CustomError.createError({
+                name: 'Cart get error',
+                cause: generateGetCartErrorInfo(cid),
+                message: 'Cart not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
         res.send({ status: "success", payload: cart });
     } catch (error) {
-        CustomError.createError({
-            name: 'Cart get error',
-            cause: generateGetCartErrorInfo(cid),
-            message: error.message,
-            code: EErrors.INVALID_PARAM_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const addProduct = async (req, res) => {
+export const addProduct = async (req, res, next) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
 
     try {
+
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+            CustomError.createError({
+                name: 'Add product to cart error',
+                cause: generateObjectIdErrorInfo(cid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+        if (!mongoose.Types.ObjectId.isValid(pid)) {
+            CustomError.createError({
+                name: 'Add product to cart error',
+                cause: generateObjectIdErrorInfo(pid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
         const cart = await cartsService.addProductToCart(cid, pid);
+
+        if (!cart) {
+            CustomError.createError({
+                name: 'Add product to cart error',
+                cause: generateAddToCartErrorInfo(pid, cid),
+                message: 'Product or cart not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        CustomError.createError({
-            name: 'Add product to cart error',
-            cause: generateAddToCartErrorInfo(pid, cid),
-            message: error.message,
-            code: EErrors.INVALID_TYPES_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res, next) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
 
     try {
+
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+            CustomError.createError({
+                name: 'Delete product from cart error',
+                cause: generateObjectIdErrorInfo(cid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+        if (!mongoose.Types.ObjectId.isValid(pid)) {
+            CustomError.createError({
+                name: 'Delete product from cart error',
+                cause: generateObjectIdErrorInfo(pid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
         const cart = await cartsService.deleteProductFromCart(cid, pid);
+
+        if (!cart) {
+            CustomError.createError({
+                name: 'Delete product from cart error',
+                cause: generateAddToCartErrorInfo(pid, cid),
+                message: 'Product or cart not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        CustomError.createError({
-            name: 'Delete product from cart error',
-            cause: generateAddToCartErrorInfo(pid, cid),
-            message: error.message,
-            code: EErrors.INVALID_TYPES_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const updateCart = async (req, res) => {
+export const updateCart = async (req, res, next) => {
     const cid = req.params.cid;
     const products = req.body;
 
     try {
+
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+            CustomError.createError({
+                name: 'Update products in cart error',
+                cause: generateObjectIdErrorInfo(cid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        if (!Array.isArray(products)) {
+            CustomError.createError({
+                name: 'Update products in cart error',
+                cause: 'products tiene que ser un array',
+                message: 'Products must be an array',
+                code: EErrors.INVALID_PARAM_ERROR
+            });
+        }
+
+        const isValidProductFormat = products.every(product => {
+            return (
+                typeof product === 'object' &&
+                product !== null &&
+                'product' in product &&
+                'quantity' in product &&
+                mongoose.Types.ObjectId.isValid(product.product) &&
+                typeof product.quantity === 'number'
+            );
+        });
+
+        if (!isValidProductFormat) {
+            CustomError.createError({
+                name: 'Update products in cart error',
+                cause: 'Alguno de los productos no tiene el formato requerido',
+                message: 'Invalid format for one or more products',
+                code: EErrors.INVALID_PARAM_ERROR
+            });
+        }
+
         const cart = await cartsService.updateCartProducts(cid, products);
+
+        if (!cart) {
+            CustomError.createError({
+                name: 'Update products in cart error',
+                cause: generateGetCartErrorInfo(cid),
+                message: 'Cart not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        CustomError.createError({
-            name: 'Update cart error',
-            cause:  generateInvalidTypeErrorInfo(),
-            message: error.message,
-            code: EErrors.INVALID_TYPES_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const updateQuantity = async (req, res) => {
+export const updateQuantity = async (req, res, next) => {
     const cid = req.params.cid;
     const pid = req.params.pid;
     const newQuantity = req.body.quantity;
 
     try {
+
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+            CustomError.createError({
+                name: 'Update quantity of product in cart error',
+                cause: generateObjectIdErrorInfo(cid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+        if (!mongoose.Types.ObjectId.isValid(pid)) {
+            CustomError.createError({
+                name: 'Update quantity of product in cart error',
+                cause: generateObjectIdErrorInfo(pid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        if(isNaN(newQuantity)){
+            CustomError.createError({
+                name: 'Update quantity of product in cart error',
+                cause: 'La cantidad de productos debe ser un número',
+                message: 'newQuantity invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
         const cart = await cartsService.updateQuantityOfProducts(cid, pid, newQuantity);
+
+        if (!cart) {
+            CustomError.createError({
+                name: 'Update quantity of product in cart error',
+                cause: generateAddToCartErrorInfo(pid, cid),
+                message: 'Product or cart not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        CustomError.createError({
-            name: 'Update quantity of a product in the cart error',
-            cause: generateInvalidTypeErrorInfo(),
-            message: error.message,
-            code: EErrors.INVALID_TYPES_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const cleanCart = async (req, res) => {
+export const cleanCart = async (req, res, next) => {
     const cid = req.params.cid;
 
     try {
+
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+            CustomError.createError({
+                name: 'Clean cart error',
+                cause: generateObjectIdErrorInfo(cid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
         const cart = await cartsService.deleteCartProducts(cid);
+
+        if (!cart) {
+            CustomError.createError({
+                name: 'Clean cart error',
+                cause: generateGetCartErrorInfo(cid),
+                message: 'Cart not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
         res.send({ status: 'success', payload: cart });
 
     } catch (error) {
-        CustomError.createError({
-            name: 'Clean cart error',
-            cause: generateCleanCartErrorInfo(cid),
-            message: error.message,
-            code: EErrors.INVALID_PARAM_ERROR
-        })
+        req.logger.error(error.message)
+        next(error)
     }
 }
 
-export const purchase = async (req, res) => {
+export const purchase = async (req, res, next) => {
     const cid = req.params.cid;
     const { shippingPrice, email } = req.body;
 
     try {
 
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+            CustomError.createError({
+                name: 'Get cart error',
+                cause: generateObjectIdErrorInfo(cid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        if(isNaN(shippingPrice)) {
+            CustomError.createError({
+                name: 'Purchase error',
+                cause: 'El costo de envío debe ser un número',
+                message: 'shippingPrice invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            CustomError.createError({
+                name: 'Purchase error',
+                cause: 'El email no tiene formato aceptado',
+                message: 'email invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            }) 
+        }
+
         const cart = await cartsService.getCartById(cid);
+
+        if (!cart) {
+            CustomError.createError({
+                name: 'Get cart error',
+                cause: generateGetCartErrorInfo(cid),
+                message: 'Cart not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
 
         let cartProducts = cart.products;
         let orderProducts = [];
@@ -193,9 +383,9 @@ export const purchase = async (req, res) => {
         })
 
         const html = `<h1>Resumen de tu orden</h1><p>Ticket: ${ticket.code}<br>Fecha y hora: ${ticket.purchase_datetime}<br>Total: $ ${ticket.amount}<br>Productos: ${mssg}</p>`
-    
+
         const result = await sendEmailToUser(email, subject, html)
-    
+
         if (result.rejected.length > 0) {
             CustomError.createError({
                 name: 'Email rejected',
@@ -210,7 +400,7 @@ export const purchase = async (req, res) => {
         res.send({ status: 'success', payload: order });
 
     } catch (error) {
-        req.logger.error(`Error in purchase`)
-        res.status(404).send({ status: 'error', message: error.message })
+        req.logger.error(error.message)
+        next(error)
     }
 } 

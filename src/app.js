@@ -41,11 +41,13 @@ app.use('/', viewsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use('/loggerTest', loggerRouter);
 
-app.use(errorHandler);
+
 
 const server = app.listen(config.port, () => {
     console.log('Server ON')
 })
+
+app.use(errorHandler);
 
 // socket server
 const io = new Server(server)
