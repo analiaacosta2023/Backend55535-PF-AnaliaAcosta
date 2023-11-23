@@ -2,9 +2,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt'
 import passport from "passport";
-import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import { resetCodesService } from './services/index.js';
 import { Faker, es } from '@faker-js/faker';
 import CustomError from "./services/errors/CustomError.js";
 import EErrors from "./services/errors/enums.js";
@@ -51,7 +49,7 @@ export const passportCall = (strategy) => {
     }
 }
 
-export const authorization = (role) => {
+export const authorization = (roles) => {
     return async (req, res, next) => {
         try {
             if (!req.user) {
@@ -62,10 +60,10 @@ export const authorization = (role) => {
                     code: EErrors.UNAUTHORIZED
                 })
             }
-            if (req.user.role != role) {
+            if (!roles.includes(req.user.role)) {
                 CustomError.createError({
                     name: 'No permissions',
-                    cause: generateAuthorizationErrorInfo(role),
+                    cause: generateAuthorizationErrorInfo(req.user.role),
                     message: 'Forbidden',
                     code: EErrors.FORBIDDEN
                 })
@@ -76,15 +74,6 @@ export const authorization = (role) => {
             next(error)
         }
     }
-}
-
-// Para generar random code en reset password
-
-export const generateRandomCode = () => {
-    const codeLength = 6;
-    return crypto.randomBytes(Math.ceil(codeLength / 2))
-        .toString('hex')
-        .slice(0, codeLength);
 }
 
 // Para enviar mail al usuario
@@ -109,31 +98,6 @@ export const sendEmailToUser = async (email, subject, html) => {
 
     })
     return (result);
-}
-
-// Validar codigo de recuperacion
-
-export const validateResetCode = () => {
-    return async (req, res, next) => {
-        const { code, email, password } = req.body;
-        if (!email || !password || !code) {
-            return res.status(400).send({ status: "error", error: "Datos incompletos" });
-        }
-
-        const resetCode = await resetCodesService.getCode(email, code)
-
-        if (!resetCode) {
-            return res.status(404).json({ error: 'Código inválido' });
-        }
-
-        if (resetCode.expiresAt <= new Date()) {
-            return res.status(400).json({ error: 'Código expirado' });
-        }
-
-        await resetCodesService.deleteCode(email, code)
-
-        next();
-    }
 }
 
 // Mocking

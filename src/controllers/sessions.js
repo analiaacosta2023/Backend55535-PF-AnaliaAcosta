@@ -1,10 +1,11 @@
-import { usersService, resetCodesService } from '../services/index.js';
-import { createHash, generateRandomCode, sendEmailToUser } from "../utils.js";
+import { usersService, resetTokensService } from '../services/index.js';
+import { createHash, sendEmailToUser, isValidPassword} from "../utils.js";
 import jwt from 'jsonwebtoken';
 import UserDTOCurrent from '../dao/DTOs/userDTOCurrent.js';
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { generateGetUserByEmailErrorInfo, generateEmailErrorInfo } from "../services/errors/info.js";
+import config from '../config/config.js'
 
 export const login = async (req, res) => {
 
@@ -91,22 +92,24 @@ export const resetPassword = async (req, res, next) => {
             })
         }
 
-        const code = generateRandomCode();
+        const token = jwt.sign({ email }, config.restartPassKey, { expiresIn: '1h' });
 
-        const newCode = await resetCodesService.saveCode(email, code);
+        const newToken = await resetTokensService.saveToken(email, token);
 
-        if (!newCode) {
+        if (!newToken) {
             CustomError.createError({
                 name: 'Internal Server Error',
-                cause: 'Error guardando el código de recuperación.',
+                cause: 'Error guardando el token de recuperación.',
                 message: 'Error saving code',
                 code: EErrors.SERVER_ERROR
             })
         }
 
-        const subject = "Código de recuperación de tu contraseña"
+        const subject = "Recuperación de tu contraseña";
+        const changePasswordLink = `http://localhost:8080/restartpassword/${token}`;
 
-        const html = `<p>El código para recuperar tu contraseña es: ${code}<br>Si no fuiste tú quién lo solicitó, ignora este mensaje.</p>`
+        const html = `<p>Haz clic en el siguiente enlace para cambiar tu contraseña:</p>
+        <button><a href="${changePasswordLink}">Link</a></button>`
 
         const result = await sendEmailToUser(email, subject, html)
 
@@ -114,12 +117,12 @@ export const resetPassword = async (req, res, next) => {
             CustomError.createError({
                 name: 'Email rejected',
                 cause: generateEmailErrorInfo(email),
-                message: "El email con el código de recuperación fue rechazado.",
+                message: "El email para la recuperación de la contraseña fue rechazado.",
                 code: EErrors.INVALID_PARAM_ERROR
             })
         }
 
-        res.status(200).json({ message: 'Código de recuperación enviado exitosamente' });
+        res.status(200).json({ message: 'Email de recuperación enviado exitosamente' });
     } catch (error) {
         req.logger.error(error.message)
         next(error)
@@ -127,15 +130,41 @@ export const resetPassword = async (req, res, next) => {
 
 }
 
-export const restartPassword = async (req, res) => {
+export const restartPassword = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    const passwordHash = createHash(password);
-    const updates = { password: passwordHash }
-    await usersService.updateUser(email, updates)
-    res.send({ status: "success" })
+    try {        
 
+        let user = await usersService.getUserByEmail(email);
+
+        if (!user) {
+            CustomError.createError({
+                name: 'User get error',
+                cause: generateGetUserByEmailErrorInfo(email),
+                message: 'User not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
+        if (isValidPassword(user, password)) {
+            CustomError.createError({
+                name: 'Password rejected',
+                cause: 'No se permite el uso de contraseñas anteriores.',
+                message: "This password is not allowed",
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        await resetTokensService.deleteToken(email)
+        const passwordHash = createHash(password);
+        const updates = { password: passwordHash }
+        await usersService.updateUser(email, updates)
+        res.send({ status: "success" })
+    } catch (error) {
+        req.logger.error(error.message)
+        next(error)
+    }
 }
 
 export const current = (req, res) => {

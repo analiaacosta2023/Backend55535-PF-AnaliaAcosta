@@ -34,3 +34,27 @@ error: User not found
 error: User not found
 error: Not valid email
 error: Not valid email
+error: resetTokensService.saveCode is not a function
+error: data and hash arguments required
+error: data and hash arguments required
+error: data and hash arguments required
+error: data and hash arguments required
+error: data and hash arguments required
+error: data and hash arguments required
+error: data and hash arguments required
+error: username is not defined
+error: This password is not allowed
+error: role is not defined
+error: Unauthorized
+error: Unauthorized
+error: Unauthorized
+error: Error: No auth token
+error: role is not defined
+error: Forbidden
+error: mongoose is not defined
+error: Forbidden
+error: Forbidden
+error: Forbidden
+error: Forbidden
+error: Forbidden
+error: email is not defined

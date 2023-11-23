@@ -6,6 +6,6 @@ const router = Router();
 
 router.get('/', getMessages)
 
-router.post('/', passportCall('jwt'), authorization('usuario'), newMessage)
+router.post('/', passportCall('jwt'), authorization(['usuario']), newMessage)
 
 export default router;

@@ -8,6 +8,7 @@ import viewsRouter from "./routes/views.js"
 import sessionsRouter from './routes/sessions.js'
 import mockingRouter from './routes/mocking.js'
 import loggerRouter from './routes/logger.js'
+import usersRouter from './routes/users.js'
 import handlebars from "express-handlebars";
 import {productsService} from "./services/index.js"
 import passport from 'passport';
@@ -40,6 +41,7 @@ app.use('/api/sessions', sessionsRouter);
 app.use('/', viewsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use('/loggerTest', loggerRouter);
+app.use('/api/users', usersRouter)
 
 
 
@@ -58,10 +60,9 @@ io.on('connection', async (socket) => {
     const {docs} = await productsService.getAll({});
     io.emit('products', docs);
 
-    socket.on('new-product', async data => {
+    socket.on('product-change', async data => {
 
         try {
-            await productsService.addProduct(data.message);
 
             const {docs} = await productsService.getAll({});
 
@@ -69,20 +70,6 @@ io.on('connection', async (socket) => {
 
         } catch (error) {
             io.emit('error', error);
-        }
-    })
-
-    socket.on('delete-product', async data => {
-
-        try {
-            await productsService.deleteProduct(data.message);
-
-            const {docs} = await productsService.getAll({});
-
-            io.emit('products', docs);
-
-        } catch (error) {
-            io.emit('error', error.message);
         }
     })
 

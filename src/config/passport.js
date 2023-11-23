@@ -22,7 +22,7 @@ const ExtractJWT = jwt.ExtractJwt;
 
 export const initializePassport = () => {
     passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email', session: false }, async (req, username, password, done) => {
-        const { first_name, last_name, email, age } = req.body;
+        const { first_name, last_name, email, age, role = 'usuario' } = req.body;
         try {
 
             if (email === admin.email) {
@@ -39,7 +39,8 @@ export const initializePassport = () => {
                 email,
                 age,
                 cart: await cartsService.addCart({}),
-                password: createHash(password)
+                password: createHash(password),
+                role
             };
             let result = await usersService.addUser(newUser);
             return done(null, result)

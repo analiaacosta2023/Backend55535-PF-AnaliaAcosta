@@ -41,7 +41,7 @@ export const generateGetUserByEmailErrorInfo = (email) => {
 ///
 
 export const generateAuthorizationErrorInfo = (role) => {
-    return `Usuario no autorizado. Se necesita rol de ${role}.`
+    return `Usuario no autorizado. No se puede acceder a este recurso con el rol de ${role}.`
 }
 
 ///

@@ -61,8 +61,14 @@ export const getProductById = async (req, res, next) => {
 
 export const addProduct = async (req, res, next) => {
     const product = req.body;
+    const user = req.user
 
     try {
+
+        if (user) {
+            product.owner = user.email
+        }
+
         if (!product.title || !product.description || !product.code || !product.price || !product.stock || !product.category) {
             CustomError.createError({
                 name: 'Add product error',
@@ -85,15 +91,6 @@ export const updateProduct = async (req, res, next) => {
     const propertiesToUpdate = req.body;
 
     try {
-
-        if (!mongoose.Types.ObjectId.isValid(pid)) {
-            CustomError.createError({
-                name: 'Product update error',
-                cause: generateObjectIdErrorInfo(pid),
-                message: 'Object id invalid format',
-                code: EErrors.INVALID_PARAM_ERROR
-            })
-        }
 
         if (typeof propertiesToUpdate !== 'object' || propertiesToUpdate === null) {
             CustomError.createError({
@@ -128,15 +125,6 @@ export const updateProduct = async (req, res, next) => {
 
         const product = await productsService.updateProduct(pid, propertiesToUpdate);
 
-        if (!product) {
-            CustomError.createError({
-                name: 'Product update error',
-                cause: generateGetProductErrorInfo(pid),
-                message: 'Product not found',
-                code: EErrors.ROUTING_ERROR
-            })
-        }
-
         res.send({ status: 'success', payload: product });
     } catch (error) {
         req.logger.error(error.message)
@@ -150,25 +138,7 @@ export const deleteProduct = async (req, res, next) => {
 
     try {
 
-        if (!mongoose.Types.ObjectId.isValid(pid)) {
-            CustomError.createError({
-                name: 'Product delete error',
-                cause: generateObjectIdErrorInfo(pid),
-                message: 'Object id invalid format',
-                code: EErrors.INVALID_PARAM_ERROR
-            })
-        }
-
         const result = await productsService.deleteProduct(pid);
-
-        if (!result) {
-            CustomError.createError({
-                name: 'Product delete error',
-                cause: generateGetProductErrorInfo(pid),
-                message: 'Product not found',
-                code: EErrors.ROUTING_ERROR
-            })
-        }
 
         res.send({ status: 'success', payload: result });
     } catch (error) {

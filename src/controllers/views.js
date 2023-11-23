@@ -74,3 +74,11 @@ export const register = (req, res) => {
 export const resetPassword = (req, res) => {
     res.render('resetPassword', { style: "index.css" })
 }
+
+export const restartPassword = (req, res) => {
+    res.render('restartPassword', { style: "index.css", user: req.user  })
+}
+
+export const expiredToken = (req, res) => {
+    res.render('tokenExpired', { style: "index.css" })
+}

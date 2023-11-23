@@ -5,6 +5,12 @@ form.addEventListener('submit', e => {
     const data = new FormData(form);
     const obj = {};
     data.forEach((value, key) => obj[key] = value);
+
+    const checkbox = document.getElementById('defaultCheck1');
+    if (checkbox.checked) {
+        obj.role = "premium";
+    }
+
     fetch('api/sessions/register', {
         method: 'POST',
         body: JSON.stringify(obj),

@@ -21,7 +21,34 @@ if (addProductForm) {
             category
         }
 
-        socket.emit('new-product', { message: product })
+        fetch('api/products', {
+            method: 'POST',
+            body: JSON.stringify(product),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(async (result) => {
+    
+            if (result.status === 200) {
+                socket.emit('product-change', { message: result.payload })
+            } else {
+                return await result.json().then(errorData => {
+                    throw new Error(errorData.error);
+                });
+            }
+        })
+            .catch(error => {
+    
+                Swal.fire({
+                    toast: true,
+                    position: "top-right",
+                    text: "Error: " + error.message,
+                    timer: 10000,
+                    showConfirmButton: false
+                });
+            })
+
+        
         addProductForm.reset();
 
     })
@@ -34,7 +61,29 @@ if (deleteProductForm) {
 
         const productId = document.getElementById('product-id').value.trim();
 
-        socket.emit('delete-product', { message: productId })
+        fetch(`api/products/${productId}`, {
+            method: 'DELETE'
+        }).then(async (result) => {
+    
+            if (result.status === 200) {
+                socket.emit('product-change', { message: result.payload })
+            } else {
+                return await result.json().then(errorData => {
+                    throw new Error(errorData.error);
+                });
+            }
+        })
+            .catch(error => {
+    
+                Swal.fire({
+                    toast: true,
+                    position: "top-right",
+                    text: "Error: " + error.message,
+                    timer: 10000,
+                    showConfirmButton: false
+                });
+            })
+
         deleteProductForm.reset();
 
     })
