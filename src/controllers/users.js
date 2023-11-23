@@ -40,7 +40,6 @@ export const getUserById = async (req, res, next) => {
 export const setPremium = async (req, res, next) => {
 
     const uid = req.params.uid
-    console.log('hola')
 
     try {
         if (!mongoose.Types.ObjectId.isValid(uid)) {
