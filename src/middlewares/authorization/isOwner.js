@@ -43,7 +43,7 @@ const isOwner = (condition) => {
                 if ((req.user.role === 'admin') || (product.owner === req.user.email)) {
                     CustomError.createError({
                         name: 'No permissions',
-                        cause: 'El usuario no está autorizado para modificar este producto',
+                        cause: 'El usuario no está autorizado para comprar este producto',
                         message: 'Forbidden',
                         code: EErrors.FORBIDDEN
                     })

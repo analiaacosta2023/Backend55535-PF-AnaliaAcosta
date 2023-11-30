@@ -17,8 +17,22 @@ import cookieParser from 'cookie-parser'
 import config from './config/config.js'
 import errorHandler from './middlewares/errors/index.js'
 import { addLogger } from './utils/logger.js';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express'
 
 const app = express();
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentacion de e-commerce',
+            description: 'API pensada para el curso de Desarrollo Backend de Coderhouse'
+        }
+    },
+    apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,6 +48,7 @@ app.use(cookieParser());
 initializePassport();
 app.use(passport.initialize());
 
+app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerJSDoc(swaggerOptions)))
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/messages', messagesRouter);
@@ -42,8 +57,6 @@ app.use('/', viewsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use('/loggerTest', loggerRouter);
 app.use('/api/users', usersRouter)
-
-
 
 const server = app.listen(config.port, () => {
     console.log('Server ON')

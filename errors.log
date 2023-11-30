@@ -58,3 +58,11 @@ error: Forbidden
 error: Forbidden
 error: Forbidden
 error: email is not defined
+error: No authenticated user
+error: Unauthorized
+error: E11000 duplicate key error collection: ecommerce.products index: code_1 dup key: { code: "P021" }
+error: E11000 duplicate key error collection: ecommerce.products index: code_1 dup key: { code: "P021" }
+error: E11000 duplicate key error collection: ecommerce.products index: code_1 dup key: { code: "P021" }
+error: E11000 duplicate key error collection: ecommerce.products index: code_1 dup key: { code: "P021" }
+error: E11000 duplicate key error collection: ecommerce.products index: code_1 dup key: { code: "P021" }
+error: Cart not found

@@ -78,9 +78,13 @@ export const addProduct = async (req, res, next) => {
             })
         }
         const result = await productsService.addProduct(product);
+
         res.send({ status: 'success', payload: result })
     } catch (error) {
         req.logger.error(error.message)
+        if (error.name === 'MongoServerError' && error.code === 11000) {
+            return res.status(400).json({ error: 'Ya existe un producto con el código especificado' });
+        }
         next(error)
     }
 }
@@ -128,6 +132,9 @@ export const updateProduct = async (req, res, next) => {
         res.send({ status: 'success', payload: product });
     } catch (error) {
         req.logger.error(error.message)
+        if (error.name === 'MongoServerError' && error.code === 11000) {
+            return res.status(400).json({ error: 'Ya existe un producto con el código especificado' });
+        }
         next(error)
     }
 }
