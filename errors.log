@@ -97,3 +97,7 @@ error: Unauthorized
 error: Unauthorized
 error: Unauthorized
 error: Product not found
+error: Object id invalid format
+error: Cannot update user
+error: Cannot update user
+error: Cannot update user

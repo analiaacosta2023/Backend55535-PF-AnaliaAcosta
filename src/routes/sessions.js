@@ -17,7 +17,7 @@ router.post('/register', passport.authenticate('register', { session: false, fai
 
 router.get('/failRegister', failRegister)
 
-router.get('/logout', logout);
+router.get('/logout', passportCall('jwt'), logout);
 
 router.post('/resetPassword', resetPassword);
 

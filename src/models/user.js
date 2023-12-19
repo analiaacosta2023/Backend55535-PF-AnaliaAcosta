@@ -30,10 +30,35 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["usuario", "admin", "premium"],
         default: "usuario"
+    },
+    documents: {
+        type: [
+            {
+                name: String,
+                reference: String
+            }
+        ]
+    },
+    last_connection: {
+        type: Date,
+        default: Date.now,
+    },
+    status: {
+        type: {
+            id_doc: Boolean,
+            address_doc: Boolean,
+            account_doc: Boolean,
+            _id: false
+        },
+        default: {
+            id_doc: false,
+            address_doc: false,
+            account_doc: false
+        }
     }
 });
 
-userSchema.pre('findOne', function(){
+userSchema.pre('findOne', function () {
     this.populate('cart');
 })
 

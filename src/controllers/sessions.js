@@ -1,5 +1,5 @@
 import { usersService, resetTokensService } from '../services/index.js';
-import { createHash, sendEmailToUser, isValidPassword} from "../utils.js";
+import { createHash, sendEmailToUser, isValidPassword } from "../utils.js";
 import jwt from 'jsonwebtoken';
 import UserDTOCurrent from '../dao/DTOs/userDTOCurrent.js';
 import CustomError from "../services/errors/CustomError.js";
@@ -18,6 +18,10 @@ export const login = async (req, res) => {
         role: req.user.role
     }
     const token = jwt.sign(serializedUser, 'coderSecret', { expiresIn: '1h' })
+
+    const updates = { last_connection: new Date() }
+    await usersService.updateUser(serializedUser.email, updates)
+
     res.cookie('coderCookie', token, { maxAge: 3600000 }).send({ status: "success", payload: serializedUser });
 }
 
@@ -33,6 +37,10 @@ export const githubCallback = async (req, res) => {
     }
 
     const token = jwt.sign(serializedUser, 'coderSecret', { expiresIn: '1h' })
+
+    const updates = { last_connection: new Date() }
+    await usersService.updateUser(serializedUser.email, updates)
+
     res.cookie('coderCookie', token, { maxAge: 3600000 })
     res.redirect('/products')
 }
@@ -59,8 +67,15 @@ export const failRegister = async (req, res) => {
     })
 }
 
-export const logout = (req, res, next) => {
+export const logout = async (req, res, next) => {
     try {
+        if (!req.user) {
+            res.redirect('/');
+        }
+
+        const updates = { last_connection: new Date() }
+        await usersService.updateUser(req.user.email, updates)
+
         res.clearCookie('coderCookie');
         res.redirect('/');
     } catch (error) {
@@ -134,7 +149,7 @@ export const restartPassword = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    try {        
+    try {
 
         let user = await usersService.getUserByEmail(email);
 

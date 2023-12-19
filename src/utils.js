@@ -7,6 +7,8 @@ import { Faker, es } from '@faker-js/faker';
 import CustomError from "./services/errors/CustomError.js";
 import EErrors from "./services/errors/enums.js";
 import { generateAuthorizationErrorInfo } from "./services/errors/info.js";
+import multer from 'multer';
+import fs from 'fs'
 
 
 const faker = new Faker({ locale: [es] })
@@ -115,3 +117,32 @@ export const generateProduct = () => {
         status: faker.datatype.boolean()
     }
 }
+
+// Multer
+
+const getDestination = function (req, file, cb) {
+
+    const documentType = req.body.document_type;
+  
+    const folderMappings = {
+      product: `${__dirname}/public/products`,
+      document: `${__dirname}/public/documents`,
+      profile: `${__dirname}/public/profiles`,
+    };
+  
+    const folder = folderMappings[documentType] || `${__dirname}/public/uploads`;
+  
+    fs.mkdirSync(folder, { recursive: true });
+  
+    cb(null, folder);
+  };
+
+const storage = multer.diskStorage({
+    destination: getDestination,
+    filename: (req,file,cb) => {
+        console.log(file);
+        cb(null, `${Date.now()}---${file.originalname}`)
+    }
+})
+
+export const uploader = multer({storage})

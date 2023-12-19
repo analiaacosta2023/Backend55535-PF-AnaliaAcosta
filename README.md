@@ -5,8 +5,8 @@ Este trabajo se realizó como proyecto final del curso de Desarrollo Backend de 
 Se programó el servidor de un e-commerce, utilizando server-side rendering como frontend
 
 <p align="center">
-<img src="github/products.png">
 <img src="github/login.png">
+<img src="github/products.png">
 </p>
 
 ## Datos generales:
