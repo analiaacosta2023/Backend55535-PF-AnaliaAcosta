@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "47bca456-3c67-490a-993f-9a25c7ddc799",
+		"name": "Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28971644"
+	},
+	"item": [
+		{
+			"name": "premium",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/premium/655e920cb0ec1526470b69d6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"premium",
+						"655e920cb0ec1526470b69d6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "userById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/655e920cb0ec1526470b69d6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"655e920cb0ec1526470b69d6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "documents",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "document_type",
+							"value": "document",
+							"type": "text"
+						},
+						{
+							"key": "id_doc",
+							"type": "file",
+							"src": "/Users/analiaacosta/Downloads/Analía Alejandra Acosta (portada).png"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/6573b05660919c863cfa830c/documents",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"6573b05660919c863cfa830c",
+						"documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "userById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdF9uYW1lIjoiQWRtaW4iLCJsYXN0X25hbWUiOiJDb2RlciIsImVtYWlsIjoiYWRtaW5Db2RlckBjb2Rlci5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDM3ODIxMjgsImV4cCI6MTcwMzc4NTcyOH0.Lu7xTotWT5-rv-hk9FbM5vii7xj9Tu_trtib3gnYLXA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/655e920cb0ec1526470b69d6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"655e920cb0ec1526470b69d6"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
