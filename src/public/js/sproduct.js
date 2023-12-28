@@ -13,11 +13,24 @@ smallimg[2].onclick = function () {
 
 const addToCartBtn = document.querySelector('.add-to-cart-button');
 
+if (addToCartBtn) {
+    addToCartBtn.addEventListener('click', () => {
+        const productId = addToCartBtn.getAttribute('data-product-id');
+        const cartId = addToCartBtn.getAttribute('data-cart-id');
 
-addToCartBtn.addEventListener('click', () => {
-    const productId = addToCartBtn.getAttribute('data-product-id');
-    const cartId = addToCartBtn.getAttribute('data-cart-id');
-    addToCart(cartId, productId)
-});
+        if (!productId || !cartId) {
+            Swal.fire({
+                toast: true,
+                position: "top-right",
+                text: "Error: No autorizado",
+                timer: 5000,
+                showConfirmButton: false
+            })
+            return
+        }
 
+
+        addToCart(cartId, productId)
+    });
+}
 

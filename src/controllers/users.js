@@ -4,6 +4,26 @@ import EErrors from "../services/errors/enums.js";
 import { generateObjectIdErrorInfo } from "../services/errors/info.js";
 import mongoose from 'mongoose';
 
+export const getUsers = async (req, res, next) => {
+    try {
+
+        const users = await usersService.getAll();
+
+        if (users.length === 0) {
+            return res.status(204).send('No content to return');
+        }
+
+        res.send({ status: "success", payload: users });
+    } catch (error) {
+        req.logger.error(error.message)
+        next(error)
+    }
+}
+
+export const deleteUsers = async (req, res, next) => {
+
+}
+
 export const getUserById = async (req, res, next) => {
 
     const uid = req.params.uid;
@@ -23,9 +43,42 @@ export const getUserById = async (req, res, next) => {
 
         if (!user) {
             CustomError.createError({
-                name: 'Product get error',
+                name: 'User get error',
                 cause: `No se encontró al usuario con el id ${uid}`,
-                message: 'Product not found',
+                message: 'User not found',
+                code: EErrors.ROUTING_ERROR
+            })
+        }
+
+        res.send({ status: "success", payload: user });
+    } catch (error) {
+        req.logger.error(error.message)
+        next(error)
+    }
+}
+
+export const deleteUserById = async (req, res, next) => {
+
+    const uid = req.params.uid;
+
+    try {
+
+        if (!mongoose.Types.ObjectId.isValid(uid)) {
+            CustomError.createError({
+                name: 'User get error',
+                cause: generateObjectIdErrorInfo(uid),
+                message: 'Object id invalid format',
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
+        const user = await usersService.deleteUserById(uid);
+
+        if (!user) {
+            CustomError.createError({
+                name: 'User delete error',
+                cause: `No se encontró al usuario con el id ${uid}`,
+                message: 'User not found',
                 code: EErrors.ROUTING_ERROR
             })
         }
@@ -91,8 +144,7 @@ export const setPremium = async (req, res, next) => {
 
 export const saveDocuments = async (res, req, next) => {
 
-    console.log(req.params);
-    const uid = req.params.uid;
+    const uid = req.req.params.uid;
 
     try {
         if (!mongoose.Types.ObjectId.isValid(uid)) {
@@ -115,7 +167,7 @@ export const saveDocuments = async (res, req, next) => {
             })
         }
 
-        const docs = req.files
+        const docs = req.req.files
 
         if (!docs) {
             CustomError.createError({
@@ -126,7 +178,12 @@ export const saveDocuments = async (res, req, next) => {
             })
         }
 
-        let newStatus = user.status
+        let newStatus = user.status || {
+            id_doc: false,
+            address_doc: false,
+            account_doc: false
+        }
+
         let documents = []
 
         if (docs['id_doc']) {
@@ -164,9 +221,9 @@ export const saveDocuments = async (res, req, next) => {
         }
 
         const result = await usersService.updateUser(user.email, updates)
-        res.send({ status: "success", payload: result });
+        res.res.send({ status: "success", payload: result });
     } catch (error) {
-        req.logger.error(error.message)
+        req.req.logger.error(error.message)
         next(error)
     }
 }

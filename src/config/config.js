@@ -9,5 +9,6 @@ export default {
     adminPassword: process.env.ADMIN_PASSWORD,
     persistence: process.env.PERSISTENCE,
     environment: process.env.ENVIRONMENT,
-    restartPassKey: process.env.RESTART_PASS_KEY
+    restartPassKey: process.env.RESTART_PASS_KEY,
+    jwtSecret: process.env.JWT_SECRET
 }

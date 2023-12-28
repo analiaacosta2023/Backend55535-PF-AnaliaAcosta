@@ -17,7 +17,7 @@ export const login = async (req, res) => {
         cart: req.user.cart,
         role: req.user.role
     }
-    const token = jwt.sign(serializedUser, 'coderSecret', { expiresIn: '1h' })
+    const token = jwt.sign(serializedUser, config.jwtSecret, { expiresIn: '1h' })
 
     const updates = { last_connection: new Date() }
     await usersService.updateUser(serializedUser.email, updates)
@@ -36,7 +36,7 @@ export const githubCallback = async (req, res) => {
         role: req.user.role
     }
 
-    const token = jwt.sign(serializedUser, 'coderSecret', { expiresIn: '1h' })
+    const token = jwt.sign(serializedUser, config.jwtSecret, { expiresIn: '1h' })
 
     const updates = { last_connection: new Date() }
     await usersService.updateUser(serializedUser.email, updates)

@@ -21,33 +21,7 @@ if (addProductForm) {
             category
         }
 
-        fetch('api/products', {
-            method: 'POST',
-            body: JSON.stringify(product),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(async (result) => {
-    
-            if (result.status === 200) {
-                socket.emit('product-change', { message: result.payload })
-            } else {
-                return await result.json().then(errorData => {
-                    throw new Error(errorData.error);
-                });
-            }
-        })
-            .catch(error => {
-    
-                Swal.fire({
-                    toast: true,
-                    position: "top-right",
-                    text: "Error: " + error.message,
-                    timer: 10000,
-                    showConfirmButton: false
-                });
-            })
-
+        socket.emit('new-product', { message: product })
         
         addProductForm.reset();
 
@@ -61,28 +35,7 @@ if (deleteProductForm) {
 
         const productId = document.getElementById('product-id').value.trim();
 
-        fetch(`api/products/${productId}`, {
-            method: 'DELETE'
-        }).then(async (result) => {
-    
-            if (result.status === 200) {
-                socket.emit('product-change', { message: result.payload })
-            } else {
-                return await result.json().then(errorData => {
-                    throw new Error(errorData.error);
-                });
-            }
-        })
-            .catch(error => {
-    
-                Swal.fire({
-                    toast: true,
-                    position: "top-right",
-                    text: "Error: " + error.message,
-                    timer: 10000,
-                    showConfirmButton: false
-                });
-            })
+        socket.emit('delete-product', { message: productId })
 
         deleteProductForm.reset();
 
@@ -92,19 +45,24 @@ if (deleteProductForm) {
 socket.on('products', data => {
 
     const itemContainer = document.getElementById('item-container');
-    itemContainer.innerHTML = ""
+    itemContainer.innerHTML = `<div class="row">
+    <div class="col-3">ID</div>
+                <div class="col-2">Código</div>
+                <div class="col-3">Título</div>
+                <div class="col-2">Categoría</div>
+                <div class="col-1">Precio</div>
+                <div class="col-1">Stock</div></div>`
 
     data.forEach((producto) => {
 
         let prod = document.createElement("div");
-        prod.classList.add('product-card');
-        prod.innerHTML = `            <p>id: ${producto._id}</p>
-                <p>Código: ${producto.code}</p>
-                <p>${producto.title}</p>
-                <p>Categoría: ${producto.category}</p>
-                <p>${producto.description}</p>
-                <p>$ ${producto.price}</p>
-                <p>Stock: ${producto.stock} unidades</p>`
+        prod.classList.add('row');
+        prod.innerHTML = `            <div class="col-3">${producto._id}</div>
+                <div class="col-2">${producto.code}</div>
+                <div class="col-3">${producto.title}</div>
+                <div class="col-2">${producto.category}</div>
+                <div class="col-1">$ ${producto.price}</div>
+                <div class="col-1">${producto.stock}</div>`
         itemContainer.appendChild(prod);
     })
 

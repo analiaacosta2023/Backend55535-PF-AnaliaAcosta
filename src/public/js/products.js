@@ -11,6 +11,17 @@ productCards.forEach((productCard) => {
             const productId = event.target.getAttribute('data-product-id');
             const cartId = event.target.getAttribute('data-cart-id');
 
+            if(!productId || !cartId) {
+                Swal.fire({
+                    toast: true,
+                    position: "top-right",
+                    text: "Error: No autorizado",
+                    timer: 5000,
+                    showConfirmButton: false
+                })
+                return
+            }
+
             addToCart(cartId, productId);
         } else {
 

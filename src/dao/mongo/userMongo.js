@@ -31,6 +31,16 @@ class UserMongo {
         }
     }
 
+    deleteUserById = async (id) => {
+
+        try {
+            const user = await userModel.findByIdAndDelete(id);
+            return user
+        } catch (error) {
+            throw error
+        }
+    }
+
     getUserByEmail = async (email) => {
 
         try {

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authorization, passportCall } from "../utils.js";
-import { publicAccess, privateAccess, home, realTimeProducts, chat, products, sproduct, cart, login, register, resetPassword, restartPassword, expiredToken } from '../controllers/views.js';
+import {publicAccess, privateAccess} from "../middlewares/authorization/access.js"
+import { home, realTimeProducts, chat, products, sproduct, cart, login, register, resetPassword, restartPassword, expiredToken, errorRedirection, users } from '../controllers/views.js';
 import checkTokenValidity from '../middlewares/checkTokenValidity.js';
 
 const router = Router();
@@ -26,5 +27,9 @@ router.get('/resetpassword', passportCall('jwt'), publicAccess, resetPassword)
 router.get('/restartpassword/:token', passportCall('jwt'), publicAccess, checkTokenValidity, restartPassword)
 
 router.get('/restartpassword', passportCall('jwt'), publicAccess, expiredToken)
+
+router.get('/users', passportCall('jwt'), privateAccess, authorization(['admin']), users)
+
+router.use(errorRedirection);
 
 export default router;

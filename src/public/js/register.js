@@ -26,7 +26,9 @@ form.addEventListener('submit', e => {
                     position: "top-right",
                     text: "Te registraste con éxito!",
                 }).then(
-                    setTimeout(window.location.replace('/login'), 10000)    
+                    setTimeout(() => {
+                        window.location.replace('/login');
+                    }, 8000)    
                 )
         } else {
             return result.json().then(errorData => {

@@ -1,17 +1,4 @@
-import { productsService, messagesService } from "../services/index.js"
-
-export const publicAccess = (req, res, next) => {
-    if (req.user) return res.redirect('/products');
-    next();
-}
-
-export const privateAccess = (req, res, next) => {
-    if (!req.user) {
-        req.logger.error(req.message)
-        return res.redirect('/login');
-    }
-    next();
-}
+import { productsService, messagesService, usersService } from "../services/index.js"
 
 export const home = async (req, res) => {
 
@@ -27,7 +14,12 @@ export const chat = async (req, res) => {
 
     const messages = await messagesService.getAll();
 
-    res.render('chat', { style: "index.css", user: req.user, messages })
+    let isAdmin = false
+    if (req.user.role === 'admin') {
+        isAdmin = true
+    }
+
+    res.render('chat', { style: "index.css", user: req.user, messages, isAdmin })
 }
 
 export const products = async (req, res) => {
@@ -36,7 +28,12 @@ export const products = async (req, res) => {
 
     const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages, page } = await productsService.getAll(query);
 
-    res.render('products', { style: "index.css", user: req.user, docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages, page })
+    let isAdmin = false
+    if (req.user.role === 'admin') {
+        isAdmin = true
+    }
+
+    res.render('products', { style: "index.css", user: req.user, docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages, page, isAdmin })
 }
 
 export const sproduct = async (req, res) => {
@@ -46,20 +43,33 @@ export const sproduct = async (req, res) => {
     try {
         const product = await productsService.getProductById(pid);
 
-        res.render('sproduct', { style: "index.css", user: req.user, product })
+        let isAdmin = false
+        if (req.user.role === 'admin') {
+            isAdmin = true
+        }
+
+        res.render('sproduct', { style: "index.css", user: req.user, product, isAdmin })
     } catch (error) {
-        req.logger.error(error)
+        req.logger.error(error.message)
+        res.status(404).render('error', { message: `Product not found: ${error.message}`, style: "index.css" });
     }
 }
 
 export const cart = async (req, res) => {
 
+    const cid = req.params.cid
+
     try {
-        
+
+        if (req.user.cart._id !== cid) {
+            throw new Error("Cart not found");
+        }
+
         res.render('cart', { style: "index.css", user: req.user })
 
     } catch (error) {
-        res.status(404).send(`Cart not found: ${error.message}`);
+        req.logger.error(error.message)
+        res.status(404).render('error', { message: `${error.message}`, style: "index.css" });
     }
 }
 
@@ -76,9 +86,20 @@ export const resetPassword = (req, res) => {
 }
 
 export const restartPassword = (req, res) => {
-    res.render('restartPassword', { style: "index.css", user: req.user  })
+    res.render('restartPassword', { style: "index.css", user: req.user })
 }
 
 export const expiredToken = (req, res) => {
     res.render('tokenExpired', { style: "index.css" })
+}
+
+export const errorRedirection = (req, res) => {
+    res.status(404).render('error', { message: 'Page not found', style: "index.css" });
+}
+
+export const users = async (req, res) => {
+
+    const users = await usersService.getAll();
+
+    res.render('users', { style: "index.css", user: req.user, users })
 }

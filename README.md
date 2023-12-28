@@ -39,6 +39,7 @@ npm run dev
 ### Inicio
 En *inicio*, visualizamos el botón *Iniciar sesión* que nos redirige al login, y el botón *Registrate* que nos redirige al formulario de registro.
 Desde *login*, podemos ingresar a la tienda mediante autenticación de terceros con GitHub, o bien ingresar usuario y contraseña. también están disponibles las opciones *Olvidaste tu contraseña?* y *No tienes cuenta?*
+Ademas de ingresar y registrarse, se puede *cambiar la contraseña* en caso de que haya sido olvidada. Se envía un link al email del usuario con el cual puede cambiar su contraseña dentro del lapso de 1 hora, dado que esto se realiza con un token que expira.
 
 ### Productos
 Los usuarios logueados son redirigidos al shop, donde se muestran los distintos *productos*, se puede filtrar por *categorías* en la navbar y agregar productos al *carrito*. También en la barra de navegación se puede acceder a las funcionalidades *Chat*, *Mi carrito* y *Log Out*.
@@ -50,6 +51,9 @@ Pero de existir productos en él, se podrá borrar ítems, modificar cantidad, a
 
 ### Checkout
 Presionando en *checkout*, se genera una orden de compra luego de verificar el stock de los productos. En caso de existir faltante, ese producto continuará en el carrito y se generará la orden solo con los productos que si tienen stock.
+
+### Vistas para el admin
+Tambien existen dos vistas, exclusivas para uso del administrador, una donde se pueden agregar y borrar productos (realtimeproducts), y otra donde se pueden gestionar los usuarios (users).
 
 <div align="right">Fin del recorrido.</div>
 
@@ -87,10 +91,12 @@ A continuación, se describe brevemente los endpoints principales.
 - **PUT '/api/sessions/restartPassword'** para modificar la contraseña.
 - **GET '/api/sessions/current'** para obtener el usuario logueado desde el token JWT almacenado en el navegador.
 
+(actualizar)
 ### Router Users
 - **GET '/api/users/:uid'** para obtener los datos de un usuario.
 - **PUT '/api/users/premium/:uid** para modificar el rol de un usuario.
 
+(actualizar)
 ### Router Views
 - **GET '/'** Vista home page.
 - **GET '/realtimeproducts'** Vista para agregar y borrar productos.
@@ -107,6 +113,7 @@ A continuación, se describe brevemente los endpoints principales.
 ## Base de datos
 Se utilizó la base de datos [MongoDB](https://www.mongodb.com/)
 
+(actualizar)
 ## Librerías externas utilizadas
 - **[Faker](https://fakerjs.dev/api/)** para crear mocks.
 - **[Bcrypt](https://www.npmjs.com/package/bcrypt)** para hashear contraseñas.

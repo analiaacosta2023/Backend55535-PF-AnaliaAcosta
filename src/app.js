@@ -10,7 +10,7 @@ import mockingRouter from './routes/mocking.js'
 import loggerRouter from './routes/logger.js'
 import usersRouter from './routes/users.js'
 import handlebars from "express-handlebars";
-import {productsService} from "./services/index.js"
+import { productsService, messagesService } from "./services/index.js"
 import passport from 'passport';
 import { initializePassport } from './config/passport.js';
 import cookieParser from 'cookie-parser'
@@ -53,10 +53,10 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/api/users', usersRouter)
 app.use('/', viewsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use('/loggerTest', loggerRouter);
-app.use('/api/users', usersRouter)
 
 const server = app.listen(config.port, () => {
     console.log('Server ON')
@@ -70,14 +70,15 @@ const io = new Server(server)
 io.on('connection', async (socket) => {
     console.log("Nuevo cliente conectado")
 
-    const {docs} = await productsService.getAll({});
+    const { docs } = await productsService.getAll({limit: 80});
     io.emit('products', docs);
 
-    socket.on('product-change', async data => {
+    socket.on('new-product', async data => {
 
         try {
+            await productsService.addProduct(data.message);
 
-            const {docs} = await productsService.getAll({});
+            const { docs } = await productsService.getAll({limit: 80});
 
             io.emit('products', docs);
 
@@ -86,11 +87,29 @@ io.on('connection', async (socket) => {
         }
     })
 
+    socket.on('delete-product', async data => {
+
+        try {
+            await productsService.deleteProduct(data.message);
+
+            const { docs } = await productsService.getAll({limit: 80});
+
+            io.emit('products', docs);
+
+        } catch (error) {
+            io.emit('error', error.message);
+        }
+    })
+
     socket.on('message', async data => {
 
         try {
 
-            io.emit('messageLogs', data);
+            await messagesService.saveMessage(data);
+
+            const messages = await messagesService.getAll();
+
+            io.emit('messageLogs', messages);
 
         } catch (error) {
 
@@ -100,8 +119,17 @@ io.on('connection', async (socket) => {
     })
 
     socket.on('authenticated', async data => {
-        socket.broadcast.emit('newUserConnected', data);
-                    io.emit('messageLogs', data);
+
+        try {
+            socket.broadcast.emit('newUserConnected', data);
+            const messages = await messagesService.getAll();
+
+            io.emit('messageLogs', messages);
+
+        } catch (error) {
+            io.emit('error', error.message);
+        }
+
     })
 
 })

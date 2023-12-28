@@ -62,12 +62,19 @@ border-radius: 40px;">
             <li class="nav-item">
               <a class="nav-link disabled" aria-disabled="true"><i class="fa-regular fa-user"></i> Mi cuenta</a>
             </li>
-
+            {{#if isAdmin}}
+            <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true">
+                <i class="fa-solid fa-cart-shopping"></i>Mi carrito
+              </a>
+            </li>
+            {{else}}
             <li class="nav-item">
               <a class="nav-link" href="/carts/{{user.cart._id}}">
-              <i class="fa-solid fa-cart-shopping"></i>Mi carrito
-               </a>
+                <i class="fa-solid fa-cart-shopping"></i>Mi carrito
+              </a>
             </li>
+            {{/if}}
 
             <li class="nav-item">
               <a class="nav-link" href="/api/sessions/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log
@@ -108,9 +115,9 @@ border-radius: 40px;">
 
   <div class="container">
 
-      <div class="text-center">
-    <h1 class="card" style="color: #0549A8;">Nuestros productos</h1>
-  </div>
+    <div class="text-center">
+      <h1 class="card" style="color: #0549A8;">Nuestros productos</h1>
+    </div>
 
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3">
@@ -126,17 +133,21 @@ border-radius: 40px;">
 
           <div class="card-body">
             <div class="text-center">
-                          <small style="color: #0549A8;">{{this.category}}</small>
-            <h6>{{this.code}} - {{this.title}}</h6>
+              <small style="color: #0549A8;">{{this.category}}</small>
+              <h6>{{this.code}} - {{this.title}}</h6>
             </div>
 
             <p class="mt-1">{{this.description}}</p>
-            
+
             <div class="d-flex justify-content-between align-items-center">
+              {{#if this.stock}}
               <button data-product-id="{{this._id}}" data-cart-id="{{../user.cart._id}}"
                 class="btn btn-dark ms-1 add-to-cart-button"><i class="fa-solid fa-cart-shopping add-to-cart-button"
                   data-product-id="{{this._id}}" data-cart-id="{{../user.cart._id}}"></i></button>
               <small class="text-body-secondary">$ {{this.price}}</small>
+              {{else}}
+              <small>Sin stock</small>
+              {{/if}}
             </div>
           </div>
         </div>
@@ -184,5 +195,3 @@ border-radius: 40px;">
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/addToCart.js"></script>
 <script src="/js/products.js"></script>
-
-

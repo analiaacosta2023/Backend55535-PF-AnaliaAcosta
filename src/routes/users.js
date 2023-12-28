@@ -1,10 +1,17 @@
 import { Router } from 'express';
-import { setPremium, getUserById, saveDocuments } from '../controllers/users.js';
+import { setPremium, getUserById, saveDocuments, getUsers, deleteUsers, deleteUserById } from '../controllers/users.js';
 import { uploader } from '../utils.js';
+import { authorization, passportCall } from "../utils.js";
 
 const router = Router();
 
+router.get('/', passportCall('jwt'), authorization(['admin']), getUsers)
+
+router.delete('/', passportCall('jwt'), authorization(['admin']), deleteUsers)
+
 router.get('/:uid', getUserById)
+
+router.delete('/:uid', passportCall('jwt'), authorization(['admin']), deleteUserById)
 
 router.put('/premium/:uid', setPremium)
 

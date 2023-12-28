@@ -1,4 +1,6 @@
 import UserDTO from "../dao/DTOs/userDTO.js";
+import getUserDTO from "../dao/DTOs/getUserDTO.js";
+
 export default class UsersRepository {
     constructor(dao) {
         this.dao = dao
@@ -6,7 +8,8 @@ export default class UsersRepository {
 
     getAll = async () => {
         const users = await this.dao.getAll();
-        return users
+
+        return users.map(user => new getUserDTO(user))
     }
 
     addUser = async (user) => {
@@ -16,7 +19,12 @@ export default class UsersRepository {
     }
 
     getUserById = async (id) => {
-        const user = await this.dao.getUserById(id);
+        const user = new getUserDTO(await this.dao.getUserById(id));
+        return user
+    }
+
+    deleteUserById = async (id) => {
+        const user = await this.dao.deleteUserById(id);
         return user
     }
 

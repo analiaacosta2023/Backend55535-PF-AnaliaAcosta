@@ -101,3 +101,80 @@ error: Object id invalid format
 error: Cannot update user
 error: Cannot update user
 error: Cannot update user
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: Error: No auth token
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64f650a1fe5c0b9e6ec4c42\"","value":"64f650a1fe5c0b9e6ec4c42","valueType":"string"}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: Cart not found
+error: Product not found
+error: Error: No auth token
+error: Forbidden
+error: Object id invalid format
+error: Unauthorized
+error: Error: No auth token
+error: Unauthorized
+error: Unauthorized
+error: Unauthorized
+error: Unauthorized
+error: Unauthorized
+error: Unauthorized
+error: Unauthorized
+error: Cannot read properties of undefined (reading 'email')
+error: Forbidden
+error: Unauthorized
+error: Unauthorized
+error: Error: No auth token
+error: Unauthorized
+error: Error saving docs
+error: Error saving docs
+error: Cannot set properties of undefined (setting 'id_doc')
+error: Cannot set properties of undefined (setting 'id_doc')
+error: Cannot set properties of undefined (setting 'id_doc')
+error: Cannot set properties of undefined (setting 'id_doc')
+error: Cannot set properties of undefined (setting 'id_doc')
+error: res.send is not a function
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: this.dao.getAll(...).map is not a function
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Unauthorized
+error: Cannot read properties of undefined (reading 'email')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot access 'users' before initialization
+error: Cannot access 'users' before initialization
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')
+error: Unauthorized
+error: Cannot read properties of undefined (reading 'email')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading 'map')
+error: Cannot read properties of undefined (reading '_id')
+error: Cannot read properties of undefined (reading '_id')

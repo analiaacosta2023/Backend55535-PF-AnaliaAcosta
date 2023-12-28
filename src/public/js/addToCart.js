@@ -28,6 +28,5 @@ function addToCart(cid, pid) {
                 showConfirmButton: false
             });
 
-            console.log(error.message)
         })
 }
