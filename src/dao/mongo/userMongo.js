@@ -11,6 +11,24 @@ class UserMongo {
         return users.map(user => user.toObject());
     }
 
+    getMany = async (query) => {
+        try {
+          const users = await userModel.find(query)
+          return users.map(user => user.toObject());  
+        } catch (error) {
+            throw error
+        }
+    }
+
+    deleteMany = async (query) => {
+        try {
+          const result = await userModel.deleteMany(query)
+          return result  
+        } catch (error) {
+            throw error
+        }
+    }
+
     addUser = async (user) => {
 
         try {

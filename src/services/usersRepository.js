@@ -8,8 +8,21 @@ export default class UsersRepository {
 
     getAll = async () => {
         const users = await this.dao.getAll();
+        if (!users) {
+            return [];
+        }
+        const usersDTO = users.map(user => new getUserDTO(user))
+        return usersDTO
+    }
 
-        return users.map(user => new getUserDTO(user))
+    getMany = async (query) => {
+        const users = await this.dao.getMany(query);
+        return users
+    }
+
+    deleteMany = async (query) => {
+          const result = await this.dao.deleteMany(query)
+          return result  
     }
 
     addUser = async (user) => {

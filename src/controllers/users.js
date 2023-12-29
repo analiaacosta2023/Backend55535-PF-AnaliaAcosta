@@ -3,6 +3,7 @@ import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { generateObjectIdErrorInfo } from "../services/errors/info.js";
 import mongoose from 'mongoose';
+import { sendEmailToUser } from "../utils.js";
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -20,8 +21,51 @@ export const getUsers = async (req, res, next) => {
     }
 }
 
-export const deleteUsers = async (req, res, next) => {
+export const deleteInactiveUsers = async (req, res, next) => {
+    try {
 
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+        const query = {
+            last_connection: { $lt: twoDaysAgo },
+        }
+
+        // Para testing
+/*         const halfHourAgo = new Date();
+        halfHourAgo.setMinutes(halfHourAgo.getMinutes() - 30);
+
+        const query = {
+            last_connection: { $lt: halfHourAgo },
+        } */
+
+        const users = await usersService.getMany(query);
+
+        if (users.length === 0) {
+            return res.status(204).send({ message: 'No content to return' });
+        }
+
+        await usersService.deleteMany(query);
+
+        const subject = "Usuario eliminado por inactividad de tu orden"
+        let rejectedEmails = []
+
+        for (const user of users) {
+
+            const email = user.email
+            const html = `<h1>Usuario eliminado</h1><p>Tu usuario en nuestra tienda fue eliminado por inactividad.<br>Esperamos verte pronto de regreso.</p>`
+            const result = await sendEmailToUser(email, subject, html)
+
+            if (result.rejected.length > 0) {
+                rejectedEmails.push(email)
+            }
+        }
+
+        res.send({ status: "success", payload: { users, rejectedEmails } });
+    } catch (error) {
+        req.logger.error(error.message)
+        next(error)
+    }
 }
 
 export const getUserById = async (req, res, next) => {

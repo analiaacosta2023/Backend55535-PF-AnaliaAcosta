@@ -12,17 +12,15 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/premium/655e920cb0ec1526470b69d6",
-					"protocol": "http",
+					"raw": "{{url}}/api/users/premium/6581a211dd4dfe948c556bd5",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users",
 						"premium",
-						"655e920cb0ec1526470b69d6"
+						"6581a211dd4dfe948c556bd5"
 					]
 				}
 			},
@@ -34,16 +32,43 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/655e920cb0ec1526470b69d6",
-					"protocol": "http",
+					"raw": "{{url}}/api/users/655e920cb0ec1526470b69d6",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users",
 						"655e920cb0ec1526470b69d6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdF9uYW1lIjoiQWRtaW4iLCJsYXN0X25hbWUiOiJDb2RlciIsImVtYWlsIjoiYWRtaW5Db2RlckBjb2Rlci5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDM4NjM1NzEsImV4cCI6MTcwMzg2NzE3MX0.nPrFu6HbsuBxLuYtmXxxpyKMNefAPWV7hxrTL-M2zhQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/users/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
 					]
 				}
 			},
@@ -70,12 +95,10 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/users/6573b05660919c863cfa830c/documents",
-					"protocol": "http",
+					"raw": "{{url}}/api/users/6573b05660919c863cfa830c/documents",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users",
@@ -102,16 +125,43 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/users/655e920cb0ec1526470b69d6",
-					"protocol": "http",
+					"raw": "{{url}}/api/users/655e920cb0ec1526470b69d6",
 					"host": [
-						"localhost"
+						"{{url}}"
 					],
-					"port": "8080",
 					"path": [
 						"api",
 						"users",
 						"655e920cb0ec1526470b69d6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "inactiveUsers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdF9uYW1lIjoiQWRtaW4iLCJsYXN0X25hbWUiOiJDb2RlciIsImVtYWlsIjoiYWRtaW5Db2RlckBjb2Rlci5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDM3ODIxMjgsImV4cCI6MTcwMzc4NTcyOH0.Lu7xTotWT5-rv-hk9FbM5vii7xj9Tu_trtib3gnYLXA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/users/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
 					]
 				}
 			},

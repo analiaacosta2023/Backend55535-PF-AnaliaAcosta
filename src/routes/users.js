@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { setPremium, getUserById, saveDocuments, getUsers, deleteUsers, deleteUserById } from '../controllers/users.js';
+import { setPremium, getUserById, saveDocuments, getUsers, deleteInactiveUsers, deleteUserById } from '../controllers/users.js';
 import { uploader } from '../utils.js';
 import { authorization, passportCall } from "../utils.js";
 
@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('/', passportCall('jwt'), authorization(['admin']), getUsers)
 
-router.delete('/', passportCall('jwt'), authorization(['admin']), deleteUsers)
+router.delete('/', passportCall('jwt'), authorization(['admin']), deleteInactiveUsers)
 
 router.get('/:uid', getUserById)
 
