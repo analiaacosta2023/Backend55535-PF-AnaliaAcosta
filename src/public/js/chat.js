@@ -3,6 +3,7 @@ const chatBox = document.getElementById('chatBox');
 const sendMessageButton = document.getElementById('sendMessageButton');
 
 let user
+let messages
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -58,7 +59,7 @@ socket.on('messageLogs', data => {
 
     if (!user) return;
     let log = document.getElementById('messageLogs');
-    let messages = "";
+    messages = "";
     data.forEach(message => {
         messages = messages + `${message.user.first_name} dice: ${message.message} </br>`
     })
