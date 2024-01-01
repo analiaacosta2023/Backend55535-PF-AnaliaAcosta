@@ -11,5 +11,7 @@ export default {
     environment: process.env.ENVIRONMENT,
     restartPassKey: process.env.RESTART_PASS_KEY,
     jwtSecret: process.env.JWT_SECRET,
-    appUrl: process.env.APP_URL || 'http://localhost:8080'
+    appUrl: process.env.APP_URL,
+    gitClientId: process.env.GIT_CLIENT_ID,
+    gitClientSecret: process.env.GIT_CLIENT_SECRET
 }
