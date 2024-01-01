@@ -10,5 +10,6 @@ export default {
     persistence: process.env.PERSISTENCE,
     environment: process.env.ENVIRONMENT,
     restartPassKey: process.env.RESTART_PASS_KEY,
-    jwtSecret: process.env.JWT_SECRET
+    jwtSecret: process.env.JWT_SECRET,
+    appUrl: process.env.APP_URL || 'http://localhost:8080'
 }
