@@ -45,13 +45,7 @@ if (deleteProductForm) {
 socket.on('products', data => {
 
     const itemContainer = document.getElementById('item-container');
-    itemContainer.innerHTML = `<div class="row">
-    <div class="col-3">ID</div>
-                <div class="col-2">Código</div>
-                <div class="col-3">Título</div>
-                <div class="col-2">Categoría</div>
-                <div class="col-1">Precio</div>
-                <div class="col-1">Stock</div></div>`
+    itemContainer.innerHTML = ``
 
     data.forEach((producto) => {
 

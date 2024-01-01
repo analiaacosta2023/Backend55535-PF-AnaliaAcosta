@@ -1,4 +1,4 @@
-import { productsService, messagesService, usersService } from "../services/index.js"
+import { productsService } from "../services/index.js"
 
 export const home = async (req, res) => {
 
@@ -7,19 +7,17 @@ export const home = async (req, res) => {
 
 export const realTimeProducts = async (req, res) => {
 
-    res.render('realTimeProducts', { style: "index.css" })
+    res.render('realTimeProducts', { style: "index.css", user: req.user})
 }
 
 export const chat = async (req, res) => {
-
-    const messages = await messagesService.getAll();
 
     let isAdmin = false
     if (req.user.role === 'admin') {
         isAdmin = true
     }
 
-    res.render('chat', { style: "index.css", user: req.user, messages, isAdmin })
+    res.render('chat', { style: "index.css", user: req.user, isAdmin })
 }
 
 export const products = async (req, res) => {
@@ -99,7 +97,5 @@ export const errorRedirection = (req, res) => {
 
 export const users = async (req, res) => {
 
-    const users = await usersService.getAll();
-
-    res.render('users', { style: "index.css", user: req.user, users })
+    res.render('users', { style: "index.css", user: req.user })
 }

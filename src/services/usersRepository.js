@@ -32,7 +32,7 @@ export default class UsersRepository {
     }
 
     getUserById = async (id) => {
-        const user = new getUserDTO(await this.dao.getUserById(id));
+        const user = await this.dao.getUserById(id);
         return user
     }
 

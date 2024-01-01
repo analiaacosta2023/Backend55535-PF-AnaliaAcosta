@@ -3,6 +3,7 @@ import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { generateGetProductErrorInfo, generateObjectIdErrorInfo, generateAddProductErrorInfo } from "../services/errors/info.js";
 import mongoose from 'mongoose';
+import {sendEmailToUser} from "../utils.js";
 
 export const getProducts = async (req, res, next) => {
     try {
@@ -146,6 +147,13 @@ export const deleteProduct = async (req, res, next) => {
     try {
 
         const result = await productsService.deleteProduct(pid);
+
+        if(result.owner && result.owner !=='admin'){
+            const subject = "Producto eliminado"
+            const email = result.owner
+            const html = `<h1>Producto eliminado</h1><p>Tu producto ${result.title} fue eliminado de nuestra tienda.<br>Contactate por los medios disponibles si queres restablecer tu producto.</p>`
+            await sendEmailToUser(email, subject, html)
+        }
 
         res.send({ status: 'success', payload: result });
     } catch (error) {

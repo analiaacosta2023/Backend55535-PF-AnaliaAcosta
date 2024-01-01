@@ -4,6 +4,7 @@ import EErrors from "../services/errors/enums.js";
 import { generateObjectIdErrorInfo } from "../services/errors/info.js";
 import mongoose from 'mongoose';
 import { sendEmailToUser } from "../utils.js";
+import getUserDTO from "../dao/DTOs/getUserDTO.js";
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -47,7 +48,7 @@ export const deleteInactiveUsers = async (req, res, next) => {
 
         await usersService.deleteMany(query);
 
-        const subject = "Usuario eliminado por inactividad de tu orden"
+        const subject = "Usuario eliminado por inactividad"
         let rejectedEmails = []
 
         for (const user of users) {
@@ -127,6 +128,21 @@ export const deleteUserById = async (req, res, next) => {
             })
         }
 
+        const subject = "Usuario eliminado"
+
+        const email = user.email
+        const html = `<h1>Usuario eliminado</h1><p>Tu usuario en nuestra tienda fue eliminado por decisión del admin.<br>Contactate por los medios disponibles para restablecer tu cuenta.</p>`
+        const result = await sendEmailToUser(email, subject, html)
+
+        if (result.rejected.length > 0) {
+            CustomError.createError({
+                name: 'Email rejected',
+                cause: `No se puedo enviar el email a ${email}`,
+                message: "El email fue rechazado.",
+                code: EErrors.INVALID_PARAM_ERROR
+            })
+        }
+
         res.send({ status: "success", payload: user });
     } catch (error) {
         req.logger.error(error.message)
@@ -169,7 +185,7 @@ export const setPremium = async (req, res, next) => {
                 !user.status.address_doc ||
                 !user.status.account_doc) {
                 CustomError.createError({
-                    name: 'User set premium error',
+                    name: 'Faltan cargar documentos',
                     cause: `Faltan cargar documentos`,
                     message: 'Cannot update user',
                     code: EErrors.INVALID_PARAM_ERROR
@@ -178,8 +194,9 @@ export const setPremium = async (req, res, next) => {
             updates = { role: 'premium' }
         }
 
-        const result = await usersService.updateUser(user.email, updates)
-        res.send({ status: "success", payload: result });
+        await usersService.updateUser(user.email, updates)
+        const updatedUser = new getUserDTO(await usersService.getUserById(user._id))
+        res.send({ status: "success", payload: updatedUser });
     } catch (error) {
         req.logger.error(error.message)
         next(error)

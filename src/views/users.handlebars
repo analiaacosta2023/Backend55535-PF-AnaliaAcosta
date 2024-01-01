@@ -60,13 +60,11 @@ border-radius: 40px;">
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true"><i class="fa-regular fa-user"></i> Mi
-                                cuenta</a>
+                            <a class="nav-link active" href="/users"><i class="fa-solid fa-users"></i> Usuarios</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">
-                                <i class="fa-solid fa-cart-shopping"></i>Mi carrito
+                            <a class="nav-link" href="/realtimeproducts">
+                                <i class="fa-solid fa-shirt"></i> Gestionar productos
                             </a>
                         </li>
 
@@ -87,27 +85,19 @@ border-radius: 40px;">
     <div class="container">
         <h1>Usuarios</h1>
         <button id="purge-btn">Limpiar usuarios inactivos</button>
-        <div class="container overflow-y-auto mb-4" id="users-list" style="height: 400px;">
+        <div class="container mb-1">
             <div class="row">
                 <div class="col-1">Nombre</div>
                 <div class="col-1">Apellido</div>
-                <div class="col-2">Email</div>
+                <div class="col-4">Email</div>
                 <div class="col-1">Rol</div>
                 <div class="col-1">Cambiar rol</div>
                 <div class="col-1">Borrar</div>
-                <div class="col-5">Ultima conexión</div>
+                <div class="col-3">Ultima conexión</div>
             </div>
-            {{#each users}}
-            <div class="row">
-                <div class="col-1">{{this.first_name}}</div>
-                <div class="col-1">{{this.last_name}}</div>
-                <div class="col-2">{{this.email}}</div>
-                <div class="col-1">{{this.role}}</div>
-                <div class="col-1"><button>&starf;</button></div>
-                <div class="col-1"><button>&cross;</button></div>
-                <div class="col-5">{{this.last_connection}}</div>
-            </div>
-            {{/each}}
+        </div>
+        <div class="container overflow-y-auto mb-4" id="users-list" style="height: 400px;">
+
         </div>
 
     </div>

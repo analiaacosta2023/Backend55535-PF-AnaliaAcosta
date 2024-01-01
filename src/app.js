@@ -1,5 +1,5 @@
 import express from 'express';
-import __dirname from "./utils.js";
+import __dirname, {sendEmailToUser} from "./utils.js";
 import { Server } from "socket.io";
 import productsRouter from "./routes/products.js"
 import cartsRouter from "./routes/carts.js"
@@ -73,6 +73,9 @@ io.on('connection', async (socket) => {
     const { docs } = await productsService.getAll({limit: 80});
     io.emit('products', docs);
 
+    const messages = await messagesService.getAll();
+    io.emit('messageLogs', messages);
+
     socket.on('new-product', async data => {
 
         try {
@@ -90,7 +93,14 @@ io.on('connection', async (socket) => {
     socket.on('delete-product', async data => {
 
         try {
-            await productsService.deleteProduct(data.message);
+            const result = await productsService.deleteProduct(data.message);
+
+            if(result.owner && result.owner !=='admin'){
+                const subject = "Producto eliminado"
+                const email = result.owner
+                const html = `<h1>Producto eliminado</h1><p>Tu producto ${result.title} fue eliminado de nuestra tienda por decisión del admin.<br>Contactate por los medios disponibles si querés restablecer tu producto.</p>`
+                await sendEmailToUser(email, subject, html)
+            }
 
             const { docs } = await productsService.getAll({limit: 80});
 

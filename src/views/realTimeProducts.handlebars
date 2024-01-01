@@ -1,4 +1,88 @@
-<div>
+<header data-bs-theme="dark">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-0" style="height: 100px;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="/img/logo3.jpg" style="width: 150px; border: 5px outset #0549A8;
+border-radius: 40px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg"
+                aria-controls="navbarOffcanvasLg" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg"
+                aria-labelledby="navbarOffcanvasLgLabel">
+
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menú</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+
+                <div class="offcanvas-body" style="justify-content: space-between;">
+                    <div class="navbar-nav justify-content-end mb-2 mb-md-0">
+
+                        <span class="navbar-text" style="color: #eba0b8;">
+                            Hola {{user.role}} {{user.first_name}}!
+                        </span>
+
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/products">Productos</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Categorías
+                            </a>
+                            <ul class="dropdown-menu" style="z-index: 2;">
+                                <li><a class="dropdown-item" href="/products?category=Home+%26+Kitchen">Bazar y
+                                        cocina</a></li>
+                                <li><a class="dropdown-item" href="/products?category=Electronics">Electrónica</a></li>
+                                <li><a class="dropdown-item" href="/products?category=Furniture">Muebles</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li><a class="dropdown-item" href="/products?category=Clothing">Ropa</a></li>
+                                <li><a class="dropdown-item" href="/products?category=Beauty">Belleza</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/products?category=Sports">Deportes</a></li>
+
+                            </ul>
+                        </li>
+
+
+                    </div>
+                    <div class="navbar-nav smb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/chat"><i class="fa-regular fa-comments"></i> Chat</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users"><i class="fa-solid fa-users"></i> Usuarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/realtimeproducts">
+                                <i class="fa-solid fa-shirt"></i> Gestionar productos
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/api/sessions/logout"><i
+                                    class="fa-solid fa-arrow-right-from-bracket"></i> Log
+                                out</a>
+                        </li>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<main>
+  <div class="container">
     <h1>Agregar producto</h1>
     <div class="form-container">
         <form id="add-product-form">
@@ -29,10 +113,22 @@
     </div>
     <h1>Lista de productos agregados hasta el momento</h1>
 
-    <div id="item-container" class="container m-5">
+    <div class="container mx-5 my-2">
+<div class="row">
+    <div class="col-3">ID</div>
+                <div class="col-2">Código</div>
+                <div class="col-3">Título</div>
+                <div class="col-2">Categoría</div>
+                <div class="col-1">Precio</div>
+                <div class="col-1">Stock</div></div>
+    </div>
+
+    <div id="item-container" class="container mx-5 my-2 overflow-y-auto" style="height: 400px;">
 
     </div>
-</div>
+</div>  
+</main>
+
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>

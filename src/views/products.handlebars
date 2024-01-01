@@ -59,19 +59,22 @@ border-radius: 40px;">
               <a class="nav-link" href="/chat"><i class="fa-regular fa-comments"></i> Chat</a>
             </li>
 
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true"><i class="fa-regular fa-user"></i> Mi cuenta</a>
-            </li>
             {{#if isAdmin}}
             <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">
-                <i class="fa-solid fa-cart-shopping"></i>Mi carrito
+              <a class="nav-link" href="/users"><i class="fa-solid fa-users"></i> Usuarios</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/realtimeproducts">
+                <i class="fa-solid fa-shirt"></i> Gestionar productos
               </a>
             </li>
             {{else}}
             <li class="nav-item">
+              <a class="nav-link disabled" aria-disabled="true"><i class="fa-regular fa-user"></i> Mi cuenta</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="/carts/{{user.cart._id}}">
-                <i class="fa-solid fa-cart-shopping"></i>Mi carrito
+                <i class="fa-solid fa-cart-shopping"></i> Mi carrito
               </a>
             </li>
             {{/if}}
