@@ -1,5 +1,5 @@
 import { usersService, resetTokensService } from '../services/index.js';
-import { createHash, sendEmailToUser, isValidPassword } from "../utils.js";
+import { createHash, sendEmailToUser, isValidPassword } from "../utils/utils.js";
 import jwt from 'jsonwebtoken';
 import UserDTOCurrent from '../dao/DTOs/userDTOCurrent.js';
 import CustomError from "../services/errors/CustomError.js";

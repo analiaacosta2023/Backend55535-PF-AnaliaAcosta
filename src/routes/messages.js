@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { newMessage, getMessages } from '../controllers/messages.js';
-import { authorization, passportCall } from "../utils.js";
+import { authorization, passportCall } from "../middlewares/authorization/passport.js";
 
 const router = Router();
 

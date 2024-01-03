@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { passportCall} from "../utils.js";
+import { passportCall} from "../middlewares/authorization/passport.js";
 import { current, failLogin, failRegister, githubCallback, login, logout, register, resetPassword, restartPassword } from "../controllers/sessions.js";
 
 const router = Router();

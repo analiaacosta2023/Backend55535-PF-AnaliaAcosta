@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { setPremium, getUserById, saveDocuments, getUsers, deleteInactiveUsers, deleteUserById } from '../controllers/users.js';
-import { uploader } from '../utils.js';
-import { authorization, passportCall } from "../utils.js";
+import { uploader } from '../middlewares/multer.js'
+import { authorization, passportCall } from "../middlewares/authorization/passport.js";
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { addCart, addProduct, cleanCart, deleteProduct, getCart, updateCart, updateQuantity, purchase } from '../controllers/carts.js';
-import { authorization, passportCall } from "../utils.js";
+import { authorization, passportCall } from "../middlewares/authorization/passport.js";
 import isOwner from '../middlewares/authorization/isOwner.js';
 
 const router = Router();

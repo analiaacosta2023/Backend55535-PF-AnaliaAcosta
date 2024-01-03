@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authorization, passportCall } from "../utils.js";
+import { authorization, passportCall } from "../middlewares/authorization/passport.js";
 import {publicAccess, privateAccess} from "../middlewares/authorization/access.js"
 import { home, realTimeProducts, chat, products, sproduct, cart, login, register, resetPassword, restartPassword, expiredToken, errorRedirection, users } from '../controllers/views.js';
 import checkTokenValidity from '../middlewares/checkTokenValidity.js';

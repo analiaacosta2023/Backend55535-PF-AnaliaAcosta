@@ -4,10 +4,10 @@
 Este trabajo se realizó como proyecto final del curso de Desarrollo Backend de Coderhouse.
 Se programó el servidor de un e-commerce, utilizando server-side rendering como frontend
 
-<p align="center">
-<img src="github/login.png">
-<img src="github/products.png">
-</p>
+<div style="display: flex">
+<img src="github/login.png" style="width: 50%">
+<img src="github/products.png" style="width: 50%">
+</div>
 
 ## Datos generales:
 
@@ -24,21 +24,26 @@ Se programó el servidor de un e-commerce, utilizando server-side rendering como
 - Tutor: Nicolás Mariano Ramos
 
 ## Deploy
-Se puede visualizar e interactuar con la aplicación desde el [link](). ***(No realizado todavía)***
+Se puede visualizar e interactuar con la aplicación desde el [link](https://backend55535-pf-analiaacosta-production.up.railway.app/). ***(No realizado todavía)***
 
 ## Como correr el proyecto localmente
 1. Clonar el repositorio.
-2. En el directorio del proyecto, correr en la CLI:
+2. Configurar las variables de entorno.
+3. En el directorio del proyecto, instalar las dependencias:
 ```bash
-npm run dev
+npm install
 ```
-3. Abrir http://localhost:8080 para visualizar en el navegador.
+4. Luego levantar el servidor:
+```bash
+npm run start
+```
+5. Abrir http://localhost:8080 para visualizar en el navegador.
 
 ## Recorrido por la tienda
 
 ### Inicio
 En *inicio*, visualizamos el botón *Iniciar sesión* que nos redirige al login, y el botón *Registrate* que nos redirige al formulario de registro.
-Desde *login*, podemos ingresar a la tienda mediante autenticación de terceros con GitHub, o bien ingresar usuario y contraseña. también están disponibles las opciones *Olvidaste tu contraseña?* y *No tienes cuenta?*
+Desde *login*, podemos ingresar a la tienda mediante autenticación de terceros con GitHub, o bien ingresar usuario y contraseña. También están disponibles las opciones *Olvidaste tu contraseña?* y *No tienes cuenta?*
 Ademas de ingresar y registrarse, se puede *cambiar la contraseña* en caso de que haya sido olvidada. Se envía un link al email del usuario con el cual puede cambiar su contraseña dentro del lapso de 1 hora, dado que esto se realiza con un token que expira.
 
 ### Productos
@@ -53,12 +58,12 @@ Pero de existir productos en él, se podrá borrar ítems, modificar cantidad, a
 Presionando en *checkout*, se genera una orden de compra luego de verificar el stock de los productos. En caso de existir faltante, ese producto continuará en el carrito y se generará la orden solo con los productos que si tienen stock.
 
 ### Vistas para el admin
-Tambien existen dos vistas, exclusivas para uso del administrador, una donde se pueden agregar y borrar productos (realtimeproducts), y otra donde se pueden gestionar los usuarios (users).
+Tambien existen dos vistas, exclusivas para uso del administrador, *Gestionar productos* donde se pueden agregar y borrar productos, y *Usuarios* donde se puede visualizar la lista de usuarios y modificarla.
 
 <div align="right">Fin del recorrido.</div>
 
 ## Sobre la API
-La documentación de la API se realizó con Swagger y se puede visualizar desde el endpoint **'/api/docs'** ***(Faltan algunas rutas todavía)***
+La documentación de la API se realizó con Swagger y se puede visualizar desde el endpoint **'/api/docs'**
 A continuación, se describe brevemente los endpoints principales.
 
 ### Router Carts 
@@ -91,12 +96,14 @@ A continuación, se describe brevemente los endpoints principales.
 - **PUT '/api/sessions/restartPassword'** para modificar la contraseña.
 - **GET '/api/sessions/current'** para obtener el usuario logueado desde el token JWT almacenado en el navegador.
 
-(actualizar)
 ### Router Users
+- **GET '/api/users/'** para obtener todos los usuarios.
+- **DELETE '/api/users/'** para eliminar los usuarios con 2 días de inactividad.
 - **GET '/api/users/:uid'** para obtener los datos de un usuario.
+- **DELETE '/api/users/:uid'** para eliminar un usuario.
 - **PUT '/api/users/premium/:uid** para modificar el rol de un usuario.
+- **POST '/api/users/:uid/documents'** para cargar documentos. Ver ejemplo de como cargar un documento con postman en la carpeta *postman*.
 
-(actualizar)
 ### Router Views
 - **GET '/'** Vista home page.
 - **GET '/realtimeproducts'** Vista para agregar y borrar productos.
@@ -109,11 +116,11 @@ A continuación, se describe brevemente los endpoints principales.
 - **GET '/resetpassword'** Vista para enviar email de recuperación de contraseña.
 - **GET '/restartpassword/:token'** Vista para cambiar contraseña.
 - **GET '/restartpassword'** Vista para cuando el token de recuperación ha expirado.
+- **GET '/users'** Vista con la lista de usuarios.
 
 ## Base de datos
 Se utilizó la base de datos [MongoDB](https://www.mongodb.com/)
 
-(actualizar)
 ## Librerías externas utilizadas
 - **[Faker](https://fakerjs.dev/api/)** para crear mocks.
 - **[Bcrypt](https://www.npmjs.com/package/bcrypt)** para hashear contraseñas.
@@ -123,7 +130,10 @@ Se utilizó la base de datos [MongoDB](https://www.mongodb.com/)
 - **[Handlebars](https://handlebarsjs.com/)** para server side rendering.
 - **[Json Web Token](https://jwt.io/)** y **[Passport](https://www.passportjs.org/)** para autenticación.
 - **[Mongoose](https://mongoosejs.com/)** para gestionar la base de datos.
+- **[Multer]()** para cargar documentos.
 - **[Node Mailer](https://nodemailer.com/)** para envío de emails.
+- **[Passport]()** para autenticación.
 - **[Socket.io](https://socket.io/)** para el chat.
 - **[Swagger](https://swagger.io/)** para la documentación de la API.
 - **[Winston](https://www.npmjs.com/package/winston)** para los logs.
+- **[Chai]()**, **[Mocha]()** y **[Supertest]()** para testing.

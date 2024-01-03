@@ -3,7 +3,7 @@ import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { generateGetProductErrorInfo, generateObjectIdErrorInfo, generateAddProductErrorInfo } from "../services/errors/info.js";
 import mongoose from 'mongoose';
-import {sendEmailToUser} from "../utils.js";
+import {sendEmailToUser} from "../utils/utils.js";
 
 export const getProducts = async (req, res, next) => {
     try {
