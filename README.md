@@ -24,7 +24,7 @@ Se programó el servidor de un e-commerce, utilizando server-side rendering como
 - Tutor: Nicolás Mariano Ramos
 
 ## Deploy
-Se puede visualizar e interactuar con la aplicación desde el [link](https://backend55535-pf-analiaacosta-production.up.railway.app/). ***(No realizado todavía)***
+Se puede visualizar e interactuar con la aplicación desde el [link](https://backend55535-pf-analiaacosta-production.up.railway.app/).
 
 ## Como correr el proyecto localmente
 1. Clonar el repositorio.
