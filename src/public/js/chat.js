@@ -61,7 +61,12 @@ socket.on('messageLogs', data => {
     let log = document.getElementById('messageLogs');
     messages = "";
     data.forEach(message => {
-        messages = messages + `${message.user.first_name} dice: ${message.message} </br>`
+        if(message.user){
+            messages = messages + `${message.user.first_name} dice: ${message.message} </br>`
+        } else {
+            messages = messages + `Usuario eliminado dice: ${message.message} </br>`
+        }
+
     })
     log.innerHTML = messages;
 

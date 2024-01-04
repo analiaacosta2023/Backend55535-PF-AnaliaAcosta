@@ -1,5 +1,5 @@
 import { cartsService, ticketsService, productsService } from "../services/index.js";
-import { sendEmailToUser } from "../utils/utils.js";
+import { sendEmailToUser } from "../utils.js";
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { generateGetCartErrorInfo, generateAddToCartErrorInfo, generateEmailErrorInfo, generateObjectIdErrorInfo } from "../services/errors/info.js";

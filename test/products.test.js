@@ -1,4 +1,4 @@
-import { generateProduct } from "../src/utils/utils.js";
+import { generateProduct } from "../src/utils.js";
 import supertest from 'supertest';
 import chai from 'chai'
 

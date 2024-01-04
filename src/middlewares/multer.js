@@ -1,6 +1,6 @@
 import fs from "fs";
 import multer from "multer";
-import __dirname from "../utils/utils.js";
+import __dirname from "../utils.js";
 
 const getDestination = function (req, file, cb) {
 

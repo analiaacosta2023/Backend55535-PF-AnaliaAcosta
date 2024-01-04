@@ -3,7 +3,7 @@ import local from "passport-local"
 import gitHubStrategy from "passport-github2"
 import jwt from 'passport-jwt';
 import { usersService, cartsService } from "../services/index.js";
-import { cookieExtractor, createHash, isValidPassword } from '../utils/utils.js'
+import { cookieExtractor, createHash, isValidPassword } from '../utils.js'
 import config from "./config.js";
 
 const admin = {

@@ -3,7 +3,7 @@ import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import { generateObjectIdErrorInfo } from "../services/errors/info.js";
 import mongoose from 'mongoose';
-import { sendEmailToUser } from "../utils/utils.js";
+import { sendEmailToUser } from "../utils.js";
 import getUserDTO from "../dao/DTOs/getUserDTO.js";
 
 export const getUsers = async (req, res, next) => {

@@ -1,5 +1,5 @@
 import express from 'express';
-import __dirname, {sendEmailToUser} from "./utils/utils.js";
+import __dirname, {sendEmailToUser} from "./utils.js";
 import { Server } from "socket.io";
 import productsRouter from "./routes/products.js"
 import cartsRouter from "./routes/carts.js"
