@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "ab1d781f-7b16-48f5-b314-7d14056b7e32",
+		"name": "Carts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28971644"
+	},
+	"item": [
+		{
+			"name": "newCart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/carts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/carts/65207a40a0e2fe343ebec7e1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"carts",
+						"65207a40a0e2fe343ebec7e1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addToCart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/carts/65207d88a0e2fe343ebec7fe/product/64f650a1fe5c0b9e6ec4c426",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"carts",
+						"65207d88a0e2fe343ebec7fe",
+						"product",
+						"64f650a1fe5c0b9e6ec4c426"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteProduct",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/carts/6500a5f4e460300b473acea7/product/64f650a1fe5c0b9e6ec4c426",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"carts",
+						"6500a5f4e460300b473acea7",
+						"product",
+						"64f650a1fe5c0b9e6ec4c426"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateCart",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n            {\n                \"product\": \"64f650b5fe5c0b9e6ec4c428\",\n                \"quantity\": 2,\n                \"_id\": \"6501f25b9189fbd6180786e8\"\n            },\n            {\n                \"product\": \"64f6508cfe5c0b9e6ec4c424\",\n                \"quantity\": 1,\n                \"_id\": \"6501fbbaccd095c2bcb66872\"\n            }\n        ]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/carts/6501fc09ccd095c2bcb66878",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"carts",
+						"6501fc09ccd095c2bcb66878"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateQuantity",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"quantity\": 10}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/carts/6501fc09ccd095c2bcb66878/product/64f650b5fe5c0b9e6ec4c428",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"carts",
+						"6501fc09ccd095c2bcb66878",
+						"product",
+						"64f650b5fe5c0b9e6ec4c428"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cleanCart",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/carts/6500a5f4e460300b473acea7/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"carts",
+						"6500a5f4e460300b473acea7",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8080"
+		}
+	]
+}
